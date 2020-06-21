@@ -283,6 +283,13 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		sc.GetAskMarketDepthEntryAtLevel(DepthEntry, Level);
 		LOBAskArray[Level] = DepthEntry.Quantity;
 		LOBAskPriceArray[Level] = DepthEntry.Price;
+
+		  if (DebugLog.GetInt() == 1)
+		  {
+		  sprintf(scratchmsg, "LOB: Count=%d, Index=%d, BidVolume=%d, AskVolume=%d, BidPrice=%.02f, AskPrice=%.02f\n",
+			LOBCount, Level, LOBBidArray[Level], LOBAskArray[Level], LOBBidPriceArray[Level], LOBAskPriceArray[Level]);
+		  sc.AddMessageToLog(scratchmsg, 1);
+		  }
 	}
 
 
@@ -344,7 +351,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		
 		if (DebugLog.GetInt() == 1)
 		{
-			sprintf(scratchmsg, "Bid Test: Count=%d, MinBarSize=%d, CompCount=%d, CompLevels=%d, sc.Open=%f, sc.High=%f, sc.Low=%f, sc.Close=%f, PriceArray=%f, InHighPin=%d\n",
+			sprintf(scratchmsg, "Working Orders Bid: Count=%d, MinBarSize=%d, CompCount=%d, CompLevels=%d, sc.Open=%f, sc.High=%f, sc.Low=%f, sc.Close=%f, PriceArray=%f, InHighPin=%d\n",
 				Count, MinBarSize, CompCount, CompLevels, OPEN, HIGH, LOW, CLOSE, PriceArray[0],
 				InLowPinFlag);
 			sc.AddMessageToLog(scratchmsg, 1);
@@ -371,7 +378,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		
 		if (DebugLog.GetInt() == 1)
 		{
-			sprintf(scratchmsg, "Ask Test: Count=%d, MinBarSize=%d, CompCount=%d, CompLevels=%d, sc.Open=%f, sc.High=%f, sc.Low=%f, sc.Close=%f, PriceArray=%f, InLowPin=%d\n",
+			sprintf(scratchmsg, "Working Orders Ask: Count=%d, MinBarSize=%d, CompCount=%d, CompLevels=%d, sc.Open=%f, sc.High=%f, sc.Low=%f, sc.Close=%f, PriceArray=%f, InLowPin=%d\n",
 				Count, MinBarSize, CompCount, CompLevels, OPEN, HIGH, LOW, CLOSE, PriceArray[Count - CompLevels],
 				InHighPinFlag);
 			sc.AddMessageToLog(scratchmsg, 1);
