@@ -73,6 +73,10 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	SCSubgraphRef LOBTotalBidVolumePercent = sc.Subgraph[32];
 	SCSubgraphRef LOBTotalAskVolumePercent = sc.Subgraph[33];
 	SCSubgraphRef LOBDeltaVolume = sc.Subgraph[34];
+	SCSubgraphRef LOBMinBidQty = sc.Subgraph[35];
+	SCSubgraphRef LOBMinAskQty = sc.Subgraph[36];
+	SCSubgraphRef LOBMaxBidQty = sc.Subgraph[37];
+	SCSubgraphRef LOBMaxAskQty = sc.Subgraph[38];
 
 	if (sc.HideStudy == 1)
 		return;
@@ -239,6 +243,26 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       LOBMaxAskVAP.LineWidth = 5;
       LOBMaxAskVAP.PrimaryColor = RGB(255,128,128); // light red
 
+      LOBMinBidQty.Name = "LOBMinBidQty";
+      LOBMinBidQty.DrawStyle = DRAWSTYLE_IGNORE;
+      LOBMinBidQty.LineWidth = 2;
+      LOBMinBidQty.PrimaryColor = RGB(255,128,128); // light red
+
+      LOBMinAskQty.Name = "LOBMinAskQty";
+      LOBMinAskQty.DrawStyle = DRAWSTYLE_IGNORE;
+      LOBMinAskQty.LineWidth = 2;
+      LOBMinAskQty.PrimaryColor = COLOR_GREEN;
+
+      LOBMaxBidQty.Name = "LOBMaxBidQty";
+      LOBMaxBidQty.DrawStyle = DRAWSTYLE_LINE;
+      LOBMaxBidQty.LineWidth = 5;
+      LOBMaxBidQty.PrimaryColor = RGB(128,255,255); // light cyan
+
+      LOBMaxAskQty.Name = "LOBMaxAskQty";
+      LOBMaxAskQty.DrawStyle = DRAWSTYLE_LINE;
+      LOBMaxAskQty.LineWidth = 5;
+      LOBMaxAskQty.PrimaryColor = RGB(255,128,128); // light red
+
       LOBTotalBidVolume.Name = "LOBTotalBidVolume";
       LOBTotalBidVolume.DrawStyle = DRAWSTYLE_IGNORE;
       LOBTotalBidVolume.LineWidth = 2;
@@ -321,7 +345,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	// for (i=0; i<sc.ArraySize; i++) TotalVolume =+ sc.Volume[i];
 	// AverageVolume[sc.Index] = TotalVolume / sc.ArraySize;
 	
-	/* Get active working order data */
+	/* Get active filled order data */
 	
 	for (int ElementIndex = Count - 1; ElementIndex > -1; ElementIndex--)
 	{
@@ -602,8 +626,15 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    LOBMinAskVAP[sc.Index] = xLOBMinAskVAP;
    LOBMaxBidVAP[sc.Index] = xLOBMaxBidVAP;
    LOBMaxAskVAP[sc.Index] = xLOBMaxAskVAP;
+   
+   LOBMinBidQty[sc.Index] = xLOBMinBidQty;
+   LOBMinAskQty[sc.Index] = xLOBMinAskQty;
+   LOBMaxBidQty[sc.Index] = xLOBMaxBidQty;
+   LOBMaxAskQty[sc.Index] = xLOBMaxAskQty;
+   
    LOBTotalBidVolume[sc.Index] = xLOBTotalBidVolume;
    LOBTotalAskVolume[sc.Index] = xLOBTotalAskVolume;
+   
    LOBTotalBidVolumePercent[sc.Index] = ((float)xLOBTotalBidVolume / (float)(xLOBTotalBidVolume + xLOBTotalAskVolume)) * 100.0;
    LOBTotalAskVolumePercent[sc.Index] = ((float)xLOBTotalAskVolume / (float)(xLOBTotalBidVolume + xLOBTotalAskVolume)) * 100.0;
    LOBDeltaVolume[sc.Index] = xLOBTotalAskVolume - xLOBTotalBidVolume;
