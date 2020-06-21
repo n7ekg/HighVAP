@@ -64,15 +64,15 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	SCInputRef CompareLevels = sc.Input[24];
 	SCInputRef DebugLog = sc.Input[25];
 	
-	SCSubgraphRef LOBMinBidVAP = sc.Subgraph[26]; //
-	SCSubgraphRef LOBMinAskVAP = sc.Subgraph[27]; //
-	SCSubgraphRef LOBMaxBidVAP = sc.Subgraph[28]; //
-	SCSubgraphRef LOBMaxAskVAP = sc.Subgraph[29]; //
-	SCSubgraphRef LOBTotalBidVolume = sc.Subgraph[30]; //
-	SCSubgraphRef LOBTotalAskVolume = sc.Subgraph[31]; //
-	SCSubgraphRef LOBTotalBidVolumePercent = sc.Subgraph[32]; //
-	SCSubgraphRef LOBTotalAskVolumePercent = sc.Subgraph[33]; //
-	SCSubgraphRef LOBDeltaVolume = sc.Subgraph[34]; //
+	SCSubgraphRef LOBMinBidVAP = sc.Subgraph[26];
+	SCSubgraphRef LOBMinAskVAP = sc.Subgraph[27];
+	SCSubgraphRef LOBMaxBidVAP = sc.Subgraph[28];
+	SCSubgraphRef LOBMaxAskVAP = sc.Subgraph[29];
+	SCSubgraphRef LOBTotalBidVolume = sc.Subgraph[30];
+	SCSubgraphRef LOBTotalAskVolume = sc.Subgraph[31];
+	SCSubgraphRef LOBTotalBidVolumePercent = sc.Subgraph[32];
+	SCSubgraphRef LOBTotalAskVolumePercent = sc.Subgraph[33];
+	SCSubgraphRef LOBDeltaVolume = sc.Subgraph[34];
 
 	if (sc.HideStudy == 1)
 		return;
