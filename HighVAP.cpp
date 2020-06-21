@@ -33,7 +33,7 @@ int InLowPin(float PRICE)
 */
 
 char scratchmsg[255];
-SCDLLName("High Volume At Price v0.3c") 
+SCDLLName("High Volume At Price v0.3d") 
 
 SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 {
@@ -52,31 +52,33 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	SCSubgraphRef BuyImbalance = sc.Subgraph[12];
 	SCSubgraphRef SellImbalance = sc.Subgraph[13];
 	SCSubgraphRef AverageVolume = sc.Subgraph[14];
-	SCInputRef ImbalanceRatio = sc.Input[15];
-	SCSubgraphRef VolumePerTick = sc.Subgraph[16];
-	SCSubgraphRef DeltaVolume = sc.Subgraph[17];
-	SCSubgraphRef Candle_Size = sc.Subgraph[18];
-	SCSubgraphRef ReducingVolumeBidTop = sc.Subgraph[19];
-	SCSubgraphRef ReducingVolumeBidBot = sc.Subgraph[20];
-	SCSubgraphRef ReducingVolumeAskTop = sc.Subgraph[21];
-	SCSubgraphRef ReducingVolumeAskBot = sc.Subgraph[22];
-	SCInputRef MinimumBarSize = sc.Input[23];
-	SCInputRef CompareLevels = sc.Input[24];
-	SCInputRef DebugLog = sc.Input[25];
+	SCSubgraphRef VolumePerTick = sc.Subgraph[15];
+	SCSubgraphRef DeltaVolume = sc.Subgraph[16];
+	SCSubgraphRef Candle_Size = sc.Subgraph[17];
+	SCSubgraphRef ReducingVolumeBidTop = sc.Subgraph[18];
+	SCSubgraphRef ReducingVolumeBidBot = sc.Subgraph[19];
+	SCSubgraphRef ReducingVolumeAskTop = sc.Subgraph[20];
+	SCSubgraphRef ReducingVolumeAskBot = sc.Subgraph[21];
 	
-	SCSubgraphRef LOBMinBidVAP = sc.Subgraph[26];
-	SCSubgraphRef LOBMinAskVAP = sc.Subgraph[27];
-	SCSubgraphRef LOBMaxBidVAP = sc.Subgraph[28];
-	SCSubgraphRef LOBMaxAskVAP = sc.Subgraph[29];
-	SCSubgraphRef LOBTotalBidVolume = sc.Subgraph[30];
-	SCSubgraphRef LOBTotalAskVolume = sc.Subgraph[31];
-	SCSubgraphRef LOBTotalBidVolumePercent = sc.Subgraph[32];
-	SCSubgraphRef LOBTotalAskVolumePercent = sc.Subgraph[33];
-	SCSubgraphRef LOBDeltaVolume = sc.Subgraph[34];
-	SCSubgraphRef LOBMinBidQty = sc.Subgraph[35];
-	SCSubgraphRef LOBMinAskQty = sc.Subgraph[36];
-	SCSubgraphRef LOBMaxBidQty = sc.Subgraph[37];
-	SCSubgraphRef LOBMaxAskQty = sc.Subgraph[38];
+	SCSubgraphRef LOBMinBidVAP = sc.Subgraph[22];
+	SCSubgraphRef LOBMinAskVAP = sc.Subgraph[23];
+	SCSubgraphRef LOBMaxBidVAP = sc.Subgraph[24];
+	SCSubgraphRef LOBMaxAskVAP = sc.Subgraph[25];
+	SCSubgraphRef LOBTotalBidVolume = sc.Subgraph[26];
+	SCSubgraphRef LOBTotalAskVolume = sc.Subgraph[27];
+	SCSubgraphRef LOBTotalBidVolumePercent = sc.Subgraph[28];
+	SCSubgraphRef LOBTotalAskVolumePercent = sc.Subgraph[29];
+	SCSubgraphRef LOBDeltaVolume = sc.Subgraph[30];
+	SCSubgraphRef LOBMinBidQty = sc.Subgraph[31];
+	SCSubgraphRef LOBMinAskQty = sc.Subgraph[32];
+	SCSubgraphRef LOBMaxBidQty = sc.Subgraph[33];
+	SCSubgraphRef LOBMaxAskQty = sc.Subgraph[34];
+	
+	SCInputRef ImbalanceRatio = sc.Input[0];
+	SCInputRef MinimumBarSize = sc.Input[1];
+	SCInputRef CompareLevels = sc.Input[2];
+	SCInputRef DebugLog = sc.Input[3];
+	SCInputRef MarketDepthLimit = sc.Input[4];
 
 	if (sc.HideStudy == 1)
 		return;
@@ -87,7 +89,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       sc.FreeDLL = 0;
 	  sc.DrawStudyUnderneathMainPriceGraph = 0;
 
-      sc.GraphName = "High Volume At Price v0.3c";
+      sc.GraphName = "High Volume At Price v0.3d";
       sc.StudyDescription = "Display high volume at price for each bar.";
       sc.AutoLoop = 1;
       sc.GraphRegion = 0;
@@ -187,6 +189,10 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	  DebugLog.Name = "Log Debug Data (1=Yes, 0=No)";
 	  DebugLog.SetInt(0);
 	  DebugLog.SetIntLimits(0,1);
+	  
+	  MarketDepthLimit.Name = "Limit To Levels Of Market Depth Analysis";
+	  MarketDepthLimit.SetInt(10);
+	  MarketDepthLimit.SetIntLimits(1,999);
 	  
 	  VolumePerTick.Name = "Volume Per Tick";
       VolumePerTick.DrawStyle = DRAWSTYLE_IGNORE;
@@ -332,6 +338,8 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    
    s_VolumeAtPriceV2* p_VolumeAtPriceAtIndex = 0;
    s_MarketDepthEntry DepthEntry;
+   
+   if (LOBCount > MarketDepthLimit.GetInt()) LOBCount = MarketDepthLimit.GetInt();
    
 	// sprintf(scratchmsg, "Count=%d\n", Count);
 	// sc.AddMessageToLog(scratchmsg, 1);
