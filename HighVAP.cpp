@@ -73,6 +73,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	SCSubgraphRef LOBMinAskQty = sc.Subgraph[32];
 	SCSubgraphRef LOBMaxBidQty = sc.Subgraph[33];
 	SCSubgraphRef LOBMaxAskQty = sc.Subgraph[34];
+	SCSubgraphRef LOBValidFlag = sc.Subgraph[35];
 	
 	SCInputRef ImbalanceRatio = sc.Input[0];
 	SCInputRef MinimumBarSize = sc.Input[1];
@@ -191,7 +192,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	  DebugLog.SetIntLimits(0,1);
 	  
 	  MarketDepthLimit.Name = "Limit To Levels Of Market Depth Analysis";
-	  MarketDepthLimit.SetInt(10);
+	  MarketDepthLimit.SetInt(7);
 	  MarketDepthLimit.SetIntLimits(1,999);
 	  
 	  VolumePerTick.Name = "Volume Per Tick";
@@ -294,6 +295,11 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       LOBDeltaVolume.LineWidth = 2;
       LOBDeltaVolume.PrimaryColor = RGB(0,255,255); // cyan
 
+	  LOBValidFlag.Name = "LOB Data Valid";
+      LOBValidFlag.DrawStyle = DRAWSTYLE_IGNORE;
+      LOBValidFlag.LineWidth = 1;
+      LOBValidFlag.PrimaryColor = COLOR_BLACK;
+
       return;
    }
 
@@ -339,6 +345,15 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    s_VolumeAtPriceV2* p_VolumeAtPriceAtIndex = 0;
    s_MarketDepthEntry DepthEntry;
    
+  if (DebugLog.GetInt() == 1)
+  {
+	  sprintf(scratchmsg, "LOBCount=%d, MarketDepthLimit=%d, GetBidMarketDepthNumberOfLevels=%d, GetAskMarketDepthNumberOfLevels=%d\n",
+		LOBCount, MarketDepthLimit.GetInt(), sc.GetBidMarketDepthNumberOfLevels(), sc.GetAskMarketDepthNumberOfLevels());
+	  sc.AddMessageToLog(scratchmsg, 1);
+  }
+   
+   LOBValidFlag[sc.Index] = 1;
+   if (sc.GetBidMarketDepthNumberOfLevels() != sc.GetAskMarketDepthNumberOfLevels()) LOBValidFlag[sc.Index] = 0;
    if (LOBCount > MarketDepthLimit.GetInt()) LOBCount = MarketDepthLimit.GetInt();
    
 	// sprintf(scratchmsg, "Count=%d\n", Count);
