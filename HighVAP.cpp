@@ -69,11 +69,17 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	SCSubgraphRef LOBTotalBidVolumePercent = sc.Subgraph[28];
 	SCSubgraphRef LOBTotalAskVolumePercent = sc.Subgraph[29];
 	SCSubgraphRef LOBDeltaVolume = sc.Subgraph[30];
-	SCSubgraphRef LOBMinBidQty = sc.Subgraph[31];
-	SCSubgraphRef LOBMinAskQty = sc.Subgraph[32];
-	SCSubgraphRef LOBMaxBidQty = sc.Subgraph[33];
-	SCSubgraphRef LOBMaxAskQty = sc.Subgraph[34];
+	SCSubgraphRef LOBMinBidVolume = sc.Subgraph[31];
+	SCSubgraphRef LOBMinAskVolume = sc.Subgraph[32];
+	SCSubgraphRef LOBMaxBidVolume = sc.Subgraph[33];
+	SCSubgraphRef LOBMaxAskVolume = sc.Subgraph[34];
 	SCSubgraphRef LOBValidFlag = sc.Subgraph[35];
+	SCSubgraphRef LOBAvgBidVolume = sc.Subgraph[36];
+	SCSubgraphRef LOBAvgAskVolume = sc.Subgraph[37];
+	SCSubgraphRef LOBAvgVolume = sc.Subgraph[38];
+
+	SCSubgraphRef MaxBidVolume = sc.Subgraph[39];
+	SCSubgraphRef MaxAskVolume = sc.Subgraph[40];
 	
 	SCInputRef ImbalanceRatio = sc.Input[0];
 	SCInputRef MinimumBarSize = sc.Input[1];
@@ -88,7 +94,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    {
       // During development set this flag to 1, so the DLL can be modified. When development is done, set it to 0 to improve performance.
       sc.FreeDLL = 0;
-	  sc.DrawStudyUnderneathMainPriceGraph = 0;
+	  sc.DrawStudyUnderneathMainPriceGraph = 1;
 
       sc.GraphName = "High Volume At Price v0.3d";
       sc.StudyDescription = "Display high volume at price for each bar.";
@@ -152,6 +158,16 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       AverageVolume.DrawStyle = DRAWSTYLE_IGNORE;
       AverageVolume.LineWidth = 2;
       AverageVolume.PrimaryColor = COLOR_YELLOW;
+
+      MaxBidVolume.Name = "MaxBidVolume";
+      MaxBidVolume.DrawStyle = DRAWSTYLE_IGNORE;
+      MaxBidVolume.LineWidth = 2;
+      MaxBidVolume.PrimaryColor = RGB(255,128,128); // light red;;
+
+      MaxAskVolume.Name = "MaxAskVolume";
+      MaxAskVolume.DrawStyle = DRAWSTYLE_IGNORE;
+      MaxAskVolume.LineWidth = 2;
+      MaxAskVolume.PrimaryColor = COLOR_GREEN;
 
       ZPB.Name = "Zero-Print Bid";
       ZPB.DrawStyle = DRAWSTYLE_IGNORE;
@@ -250,25 +266,40 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       LOBMaxAskVAP.LineWidth = 5;
       LOBMaxAskVAP.PrimaryColor = RGB(255,128,128); // light red
 
-      LOBMinBidQty.Name = "LOBMinBidQty";
-      LOBMinBidQty.DrawStyle = DRAWSTYLE_IGNORE;
-      LOBMinBidQty.LineWidth = 2;
-      LOBMinBidQty.PrimaryColor = RGB(255,128,128); // light red
+      LOBMinBidVolume.Name = "LOBMinBidVolume";
+      LOBMinBidVolume.DrawStyle = DRAWSTYLE_IGNORE;
+      LOBMinBidVolume.LineWidth = 2;
+      LOBMinBidVolume.PrimaryColor = RGB(255,128,128); // light red
 
-      LOBMinAskQty.Name = "LOBMinAskQty";
-      LOBMinAskQty.DrawStyle = DRAWSTYLE_IGNORE;
-      LOBMinAskQty.LineWidth = 2;
-      LOBMinAskQty.PrimaryColor = COLOR_GREEN;
+      LOBMinAskVolume.Name = "LOBMinAskVolume";
+      LOBMinAskVolume.DrawStyle = DRAWSTYLE_IGNORE;
+      LOBMinAskVolume.LineWidth = 2;
+      LOBMinAskVolume.PrimaryColor = COLOR_GREEN;
 
-      LOBMaxBidQty.Name = "LOBMaxBidQty";
-      LOBMaxBidQty.DrawStyle = DRAWSTYLE_IGNORE;
-      LOBMaxBidQty.LineWidth = 5;
-      LOBMaxBidQty.PrimaryColor = RGB(128,255,255); // light cyan
+      LOBMaxBidVolume.Name = "LOBMaxBidVolume";
+      LOBMaxBidVolume.DrawStyle = DRAWSTYLE_IGNORE;
+      LOBMaxBidVolume.LineWidth = 5;
+      LOBMaxBidVolume.PrimaryColor = RGB(128,255,255); // light cyan
 
-      LOBMaxAskQty.Name = "LOBMaxAskQty";
-      LOBMaxAskQty.DrawStyle = DRAWSTYLE_IGNORE;
-      LOBMaxAskQty.LineWidth = 5;
-      LOBMaxAskQty.PrimaryColor = RGB(255,128,128); // light red
+      LOBMaxAskVolume.Name = "LOBMaxAskVolume";
+      LOBMaxAskVolume.DrawStyle = DRAWSTYLE_IGNORE;
+      LOBMaxAskVolume.LineWidth = 5;
+      LOBMaxAskVolume.PrimaryColor = RGB(255,128,128); // light red
+
+      LOBAvgBidVolume.Name = "LOBAvgBidVolume";
+      LOBAvgBidVolume.DrawStyle = DRAWSTYLE_IGNORE;
+      LOBAvgBidVolume.LineWidth = 5;
+      LOBAvgBidVolume.PrimaryColor = RGB(128,255,255); // light cyan
+
+      LOBAvgAskVolume.Name = "LOBAvgAskVolume";
+      LOBAvgAskVolume.DrawStyle = DRAWSTYLE_IGNORE;
+      LOBAvgAskVolume.LineWidth = 5;
+      LOBAvgAskVolume.PrimaryColor = RGB(255,128,128); // light red
+
+      LOBAvgVolume.Name = "LOBAvgVolume";
+      LOBAvgVolume.DrawStyle = DRAWSTYLE_IGNORE;
+      LOBAvgVolume.LineWidth = 5;
+      LOBAvgVolume.PrimaryColor = RGB(255,128,128); // light red
 
       LOBTotalBidVolume.Name = "LOBTotalBidVolume";
       LOBTotalBidVolume.DrawStyle = DRAWSTYLE_IGNORE;
@@ -306,7 +337,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    if ((int)sc.VolumeAtPriceForBars->GetNumberOfBars() < sc.ArraySize)
       return;
 
-   unsigned int MaxBidVolume = 0, MaxAskVolume = 0, MaxVolume = 0;
+   unsigned int xMaxBidVolume = 0, xMaxAskVolume = 0, MaxVolume = 0;
    int TBV = 0, TAV = 0; // per bar
    int DV = 0;
    float MaxBidVolumePrice = 0.0, MaxAskVolumePrice = 0.0, MaxVolumePrice = 0.0, TOT = 0.0;
@@ -325,6 +356,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    unsigned int TotalVolume = 0;
    int scratch = 0, InHighPinFlag = 0, InLowPinFlag = 0;
    float MyOpen = 0.0, MyHigh = 0.0, MyLow = 0.0, MyClose = 0.0;
+   int xLOBAvgBidVolume = 0, xLOBAvgAskVolume = 0, xLOBAvgVolume = 0;
 
    int Count = sc.VolumeAtPriceForBars->GetSizeAtBarIndex(sc.Index);
    int LOBCount = min(sc.GetBidMarketDepthNumberOfLevels(), sc.GetAskMarketDepthNumberOfLevels());
@@ -332,10 +364,10 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    float xLOBMinAskVAP = 0.0;
    float xLOBMaxBidVAP = 0.0;
    float xLOBMaxAskVAP = 0.0;
-   int xLOBMinBidQty = 65530;
-   int xLOBMinAskQty = 65530;
-   int xLOBMaxBidQty = 0;
-   int xLOBMaxAskQty = 0;
+   int xLOBMinBidVolume = 65530;
+   int xLOBMinAskVolume = 65530;
+   int xLOBMaxBidVolume = 0;
+   int xLOBMaxAskVolume = 0;
    int xLOBTotalBidVolume = 0;
    int xLOBTotalAskVolume = 0;
    int xLOBTotalBidVolumePercent = 0;
@@ -406,14 +438,14 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		sc.GetBidMarketDepthEntryAtLevel(DepthEntry, Level);
 		LOBBidArray[Level] = DepthEntry.Quantity;
 		LOBBidPriceArray[Level] = DepthEntry.Price;
-		if (xLOBMaxBidQty < DepthEntry.Quantity)
+		if (xLOBMaxBidVolume < DepthEntry.Quantity)
 		{
-			xLOBMaxBidQty = DepthEntry.Quantity;
+			xLOBMaxBidVolume = DepthEntry.Quantity;
 			xLOBMaxBidVAP = DepthEntry.Price;
 		}
-		if (xLOBMinBidQty > DepthEntry.Quantity)
+		if (xLOBMinBidVolume > DepthEntry.Quantity)
 		{
-			xLOBMinBidQty = DepthEntry.Quantity;
+			xLOBMinBidVolume = DepthEntry.Quantity;
 			xLOBMinBidVAP = DepthEntry.Price;
 		}
 		xLOBTotalBidVolume += DepthEntry.Quantity;
@@ -421,14 +453,14 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		sc.GetAskMarketDepthEntryAtLevel(DepthEntry, Level);
 		LOBAskArray[Level] = DepthEntry.Quantity;
 		LOBAskPriceArray[Level] = DepthEntry.Price;
-		if (xLOBMaxAskQty < DepthEntry.Quantity)
+		if (xLOBMaxAskVolume < DepthEntry.Quantity)
 		{
-			xLOBMaxAskQty = DepthEntry.Quantity;
+			xLOBMaxAskVolume = DepthEntry.Quantity;
 			xLOBMaxAskVAP = DepthEntry.Price;
 		}
-		if (xLOBMinAskQty > DepthEntry.Quantity)
+		if (xLOBMinAskVolume > DepthEntry.Quantity)
 		{
-			xLOBMinAskQty = DepthEntry.Quantity;
+			xLOBMinAskVolume = DepthEntry.Quantity;
 			xLOBMinAskVAP = DepthEntry.Price;
 		}
 		xLOBTotalAskVolume += DepthEntry.Quantity;
@@ -440,6 +472,9 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		  sc.AddMessageToLog(scratchmsg, 1);
 		  }
 	}
+	xLOBAvgBidVolume = xLOBTotalBidVolume / LOBCount;
+	xLOBAvgAskVolume = xLOBTotalAskVolume / LOBCount;
+	xLOBAvgVolume = (xLOBAvgBidVolume + xLOBAvgAskVolume) / 2;
 
 
 // Count = 13
@@ -556,14 +591,14 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		  // sprintf(scratchmsg, "ElementIndex=%d, Price=%.02f\n", ElementIndex, p_VolumeAtPriceAtIndex->PriceInTicks * sc.TickSize);
 		  // sc.AddMessageToLog(scratchmsg, 1);
 
-		  if (p_VolumeAtPriceAtIndex->BidVolume > MaxBidVolume)
+		  if (p_VolumeAtPriceAtIndex->BidVolume > xMaxBidVolume)
 		 {
-			MaxBidVolume = p_VolumeAtPriceAtIndex->BidVolume;
+			xMaxBidVolume = p_VolumeAtPriceAtIndex->BidVolume;
 			MaxBidVolumePrice = p_VolumeAtPriceAtIndex->PriceInTicks * sc.TickSize;
 		 }
-         if (p_VolumeAtPriceAtIndex->AskVolume > MaxAskVolume)
+         if (p_VolumeAtPriceAtIndex->AskVolume > xMaxAskVolume)
 		 {
-			MaxAskVolume = p_VolumeAtPriceAtIndex->AskVolume;
+			xMaxAskVolume = p_VolumeAtPriceAtIndex->AskVolume;
 			MaxAskVolumePrice = p_VolumeAtPriceAtIndex->PriceInTicks * sc.TickSize;
 		 }
 		 
@@ -650,17 +685,24 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    LOBMaxBidVAP[sc.Index] = xLOBMaxBidVAP;
    LOBMaxAskVAP[sc.Index] = xLOBMaxAskVAP;
    
-   LOBMinBidQty[sc.Index] = xLOBMinBidQty;
-   LOBMinAskQty[sc.Index] = xLOBMinAskQty;
-   LOBMaxBidQty[sc.Index] = xLOBMaxBidQty;
-   LOBMaxAskQty[sc.Index] = xLOBMaxAskQty;
+   LOBMinBidVolume[sc.Index] = xLOBMinBidVolume;
+   LOBMinAskVolume[sc.Index] = xLOBMinAskVolume;
+   LOBMaxBidVolume[sc.Index] = xLOBMaxBidVolume;
+   LOBMaxAskVolume[sc.Index] = xLOBMaxAskVolume;
    
    LOBTotalBidVolume[sc.Index] = xLOBTotalBidVolume;
    LOBTotalAskVolume[sc.Index] = xLOBTotalAskVolume;
    
+   LOBAvgBidVolume[sc.Index] = xLOBAvgBidVolume;
+   LOBAvgAskVolume[sc.Index] = xLOBAvgAskVolume;
+   LOBAvgVolume[sc.Index] = xLOBAvgVolume;
+   
    LOBTotalBidVolumePercent[sc.Index] = ((float)xLOBTotalBidVolume / (float)(xLOBTotalBidVolume + xLOBTotalAskVolume)) * 100.0;
    LOBTotalAskVolumePercent[sc.Index] = ((float)xLOBTotalAskVolume / (float)(xLOBTotalBidVolume + xLOBTotalAskVolume)) * 100.0;
    LOBDeltaVolume[sc.Index] = xLOBTotalAskVolume - xLOBTotalBidVolume;
+   
+   MaxBidVolume[sc.Index] = xMaxBidVolume;
+   MaxAskVolume[sc.Index] = xMaxAskVolume;
    
    /*
    if (MaxBidVolume > MaxAskVolume)
