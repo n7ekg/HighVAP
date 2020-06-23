@@ -7,7 +7,7 @@
 #include "sierrachart.h"
 #include "scstudyfunctions.h"
 #include <math.h>
-#define TRIGGER 1
+#define TRIGGER 10
 
 #define OPEN sc.Open[sc.Index]
 #define HIGH sc.High[sc.Index]
