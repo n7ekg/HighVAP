@@ -2,6 +2,8 @@
    Version: 1.0
    Author: Ymmv
    http://www.bigmiketrading.com/sierra-chart-programming/20255-acsil-function-returns-price-highest-volume-within-bar.html
+   
+   This was the original code that only indicated where the highest volume was within a bar. I took it and heavily modified it.
 */
 
 #include "sierrachart.h"
@@ -345,10 +347,13 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    float BIMBPrice = 0.0, AIMBPrice = 0.0;
    float RVBTPrice = 0.0, RVATPrice = 0.0; // Reducing Volume Bid/Ask Top Price
    float RVBBPrice = 0.0, RVABPrice = 0.0; // Reducing Volume Bid/Ask Bottom Price
-   unsigned int BidArray[1000], AskArray[1000], i;
+   unsigned int i;
+
+   unsigned int BidArray[1000], AskArray[1000];
    float PriceArray[1000];
    unsigned int LOBBidArray[1000], LOBAskArray[1000];
    float LOBBidPriceArray[1000], LOBAskPriceArray[1000];
+
    int ImbRatio = ImbalanceRatio.GetInt();
    int MinBarSize = MinimumBarSize.GetInt();
    unsigned int CompLevels = CompareLevels.GetInt();
@@ -385,17 +390,20 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
   }
    
    LOBValidFlag[sc.Index] = 1;
+   // If we have incomplete data, set LOBValidFlag = 0
    if (sc.GetBidMarketDepthNumberOfLevels() != sc.GetAskMarketDepthNumberOfLevels()) LOBValidFlag[sc.Index] = 0;
    if (LOBCount > MarketDepthLimit.GetInt()) LOBCount = MarketDepthLimit.GetInt();
    
 	// sprintf(scratchmsg, "Count=%d\n", Count);
 	// sc.AddMessageToLog(scratchmsg, 1);
 
+	/*
 	for (i=0; i<1000; i++)
 	{
 		BidArray[i] = AskArray[i] = LOBBidArray[i] = LOBAskArray[i] = 0;
 		PriceArray[i] = LOBBidPriceArray[i] = LOBAskPriceArray[i] = 0.0;
 	}
+	*/
 
 	// for (i=0; i<sc.ArraySize; i++) TotalVolume =+ sc.Volume[i];
 	// AverageVolume[sc.Index] = TotalVolume / sc.ArraySize;
