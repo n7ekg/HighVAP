@@ -4,6 +4,8 @@
    http://www.bigmiketrading.com/sierra-chart-programming/20255-acsil-function-returns-price-highest-volume-within-bar.html
    
    This was the original code that only indicated where the highest volume was within a bar. I took it and heavily modified it.
+   
+   Copyright 2019, by Ed Carp. All rights reserved. Distribution without permission is prohibited.
 */
 
 #include "sierrachart.h"
