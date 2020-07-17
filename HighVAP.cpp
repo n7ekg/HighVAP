@@ -37,7 +37,7 @@ int InLowPin(float PRICE)
 */
 
 char scratchmsg[255];
-SCDLLName("High Volume At Price v0.3d") 
+SCDLLName("High Volume At Price v0.3e") 
 
 SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 {
@@ -100,7 +100,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       sc.FreeDLL = 0;
 	  sc.DrawStudyUnderneathMainPriceGraph = 1;
 
-      sc.GraphName = "High Volume At Price v0.3d";
+      sc.GraphName = "High Volume At Price v0.3e";
       sc.StudyDescription = "Display high volume at price for each bar.";
       sc.AutoLoop = 1;
       sc.GraphRegion = 0;
@@ -551,7 +551,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 			sc.AddMessageToLog(scratchmsg, 1);
 		}
 
-		if (CompCount == CompLevels-1 && InLowPinFlag == 1)
+		if (CompCount == CompLevels-1 /* && InLowPinFlag == 1 */)
 		{
 			ReducingVolumeBidBot[sc.Index] = PriceArray[0];
 			ReducingVolumeBidTop[sc.Index] = PriceArray[CompLevels - 1];
@@ -578,7 +578,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 			sc.AddMessageToLog(scratchmsg, 1);
 		}
 
-		if (CompCount == CompLevels-1 && InHighPinFlag == 1)
+		if (CompCount == CompLevels-1 /* && InHighPinFlag == 1 */)
 		{
 			ReducingVolumeAskBot[sc.Index] = PriceArray[Count - CompLevels];
 			ReducingVolumeAskTop[sc.Index] = PriceArray[Count - 1];
