@@ -765,7 +765,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	VWAPPrice.DrawStyle = DRAWSTYLE_LINE;
 	VWAPPrice.LineWidth = 2;
 	VWAPPrice.PrimaryColor = RGB(255,0,255); // purple/magenta
-   
+	VWAPPrice.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;   
    /*
    if (MaxBidVolume > MaxAskVolume)
 	   MaxVAP.PrimaryColor[sc.Index] = COLOR_RED;
