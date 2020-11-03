@@ -37,7 +37,7 @@ int InLowPin(float PRICE)
 */
 
 char scratchmsg[255];
-SCDLLName("High Volume At Price v0.3e") 
+SCDLLName("High Volume At Price v0.4") 
 
 SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 {
@@ -85,6 +85,11 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	SCSubgraphRef MaxBidVolume = sc.Subgraph[39];
 	SCSubgraphRef MaxAskVolume = sc.Subgraph[40];
 	
+	SCSubgraphRef LOBCurBidVolume = sc.Subgraph[41];
+	SCSubgraphRef LOBCurAskVolume = sc.Subgraph[42];
+	SCSubgraphRef CurPrice = sc.Subgraph[43];
+	SCSubgraphRef VWAPPrice = sc.Subgraph[44];
+	
 	SCInputRef ImbalanceRatio = sc.Input[0];
 	SCInputRef MinimumBarSize = sc.Input[1];
 	SCInputRef CompareLevels = sc.Input[2];
@@ -100,8 +105,8 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       sc.FreeDLL = 0;
 	  sc.DrawStudyUnderneathMainPriceGraph = 1;
 
-      sc.GraphName = "High Volume At Price v0.3e";
-      sc.StudyDescription = "Display high volume at price for each bar.";
+      sc.GraphName = "High Volume At Price v0.4";
+      sc.StudyDescription = "Display various statistics for each bar.";
       sc.AutoLoop = 1;
       sc.GraphRegion = 0;
       sc.ScaleRangeType = SCALE_SAMEASREGION;
@@ -225,6 +230,11 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       DeltaVolume.LineWidth = 2;
       DeltaVolume.PrimaryColor = RGB(0,255,255); // cyan
 
+      VWAPPrice.Name = "VWAP Price";
+      VWAPPrice.DrawStyle = DRAWSTYLE_DASH;
+      VWAPPrice.LineWidth = 2;
+      VWAPPrice.PrimaryColor = RGB(255,0,255); // purple/magenta
+
 	  Candle_Size.Name = "Candle Size";
       Candle_Size.DrawStyle = DRAWSTYLE_IGNORE;
       Candle_Size.LineWidth = 2;
@@ -330,6 +340,21 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       LOBDeltaVolume.LineWidth = 2;
       LOBDeltaVolume.PrimaryColor = RGB(0,255,255); // cyan
 
+      LOBCurBidVolume.Name = "LOBCurBidVolume";
+      LOBCurBidVolume.DrawStyle = DRAWSTYLE_IGNORE;
+      LOBCurBidVolume.LineWidth = 5;
+      LOBCurBidVolume.PrimaryColor = RGB(128,255,255); // light cyan
+
+      LOBCurAskVolume.Name = "LOBCurAskVolume";
+      LOBCurAskVolume.DrawStyle = DRAWSTYLE_IGNORE;
+      LOBCurAskVolume.LineWidth = 5;
+      LOBCurAskVolume.PrimaryColor = RGB(255,128,128); // light red
+
+      CurPrice.Name = "Current Price";
+      CurPrice.DrawStyle = DRAWSTYLE_IGNORE;
+      CurPrice.LineWidth = 5;
+      CurPrice.PrimaryColor = COLOR_WHITE;
+
 	  LOBValidFlag.Name = "LOB Data Valid";
       LOBValidFlag.DrawStyle = DRAWSTYLE_IGNORE;
       LOBValidFlag.LineWidth = 1;
@@ -343,6 +368,9 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 
    unsigned int xMaxBidVolume = 0, xMaxAskVolume = 0, MaxVolume = 0;
    int TBV = 0, TAV = 0; // per bar
+   long TV = 0L; // Total volume for the bar
+   float PTV = 0.0; // Price x total volume, used for VWAP calculation
+   long xVWAPPrice;
    int DV = 0;
    float MaxBidVolumePrice = 0.0, MaxAskVolumePrice = 0.0, MaxVolumePrice = 0.0, TOT = 0.0;
    float ZPBPrice = 0.0, ZPAPrice = 0.0;
@@ -380,6 +408,9 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    int xLOBTotalBidVolumePercent = 0;
    int xLOBTotalAskVolumePercent = 0;
    int xLOBDeltaVolume = 0;
+   int xLOBCurBidVolume = 0;
+   int xLOBCurAskVolume = 0;
+   float xCurPrice = 0.0;
    
    s_VolumeAtPriceV2* p_VolumeAtPriceAtIndex = 0;
    s_MarketDepthEntry DepthEntry;
@@ -394,6 +425,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    LOBValidFlag[sc.Index] = 1;
    // If we have incomplete data, set LOBValidFlag = 0
    if (sc.GetBidMarketDepthNumberOfLevels() != sc.GetAskMarketDepthNumberOfLevels()) LOBValidFlag[sc.Index] = 0;
+   if (LOBCount < MarketDepthLimit.GetInt()) LOBValidFlag[sc.Index] = 0;
    if (LOBCount > MarketDepthLimit.GetInt()) LOBCount = MarketDepthLimit.GetInt();
    
 	// sprintf(scratchmsg, "Count=%d\n", Count);
@@ -412,6 +444,8 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	
 	/* Get active filled order data */
 	
+	TV = 0L;
+	PTV = 0.0;
 	for (int ElementIndex = Count - 1; ElementIndex > -1; ElementIndex--)
 	{
 	  // s_VolumeAtPriceV2* p_VolumeAtPriceAtIndex = 0;
@@ -422,6 +456,8 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		  BidArray[ElementIndex] = p_VolumeAtPriceAtIndex->BidVolume;
 		  AskArray[ElementIndex] = p_VolumeAtPriceAtIndex->AskVolume;
 		  PriceArray[ElementIndex] = p_VolumeAtPriceAtIndex->PriceInTicks * sc.TickSize;
+		  PTV += (p_VolumeAtPriceAtIndex->PriceInTicks * sc.TickSize) * (p_VolumeAtPriceAtIndex->BidVolume + p_VolumeAtPriceAtIndex->AskVolume);
+		  TV += p_VolumeAtPriceAtIndex->BidVolume + p_VolumeAtPriceAtIndex->AskVolume;
 		  if (DebugLog.GetInt() == 1)
 		  {
 		  sprintf(scratchmsg, "Count=%d, MinBarSize=%d, Index=%d, BidVolume=%d, AskVolume=%d, Price=%.02f\n",
@@ -430,6 +466,8 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		  }
 	  }
 	}
+	xVWAPPrice = PTV / TV;
+	xCurPrice = PriceArray[0];
 
 // LOB: Count=10, Index=9, BidVolume=159, AskVolume=87, BidPrice=3091.75, AskPrice=3096.50
 // LOB: Count=10, Index=8, BidVolume=74, AskVolume=75, BidPrice=3092.00, AskPrice=3096.25
@@ -485,6 +523,8 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	xLOBAvgBidVolume = xLOBTotalBidVolume / LOBCount;
 	xLOBAvgAskVolume = xLOBTotalAskVolume / LOBCount;
 	xLOBAvgVolume = (xLOBAvgBidVolume + xLOBAvgAskVolume) / 2;
+	xLOBCurBidVolume = LOBBidArray[0];
+	xLOBCurAskVolume = LOBAskArray[0];
 
 
 // Count = 13
@@ -555,6 +595,8 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		{
 			ReducingVolumeBidBot[sc.Index] = PriceArray[0];
 			ReducingVolumeBidTop[sc.Index] = PriceArray[CompLevels - 1];
+			// ReducingVolumeAskBot[sc.Index] = 0;
+			// ReducingVolumeAskTop[sc.Index] = 0;
 		}
 		
 		// if (AskArray[Count - 1] <= AskArray[Count - 2] && AskArray[Count - 2] <= AskArray[Count - 3]) // && BidArray[Count - 1] <= BidArray[Count - 2] && BidArray[Count - 2] <= BidArray[Count - 3])
@@ -582,6 +624,8 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		{
 			ReducingVolumeAskBot[sc.Index] = PriceArray[Count - CompLevels];
 			ReducingVolumeAskTop[sc.Index] = PriceArray[Count - 1];
+			// ReducingVolumeBidBot[sc.Index] = 0;
+			// ReducingVolumeBidTop[sc.Index] = 0;
 		}
 
 	/*****************************************************
@@ -713,6 +757,11 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    
    MaxBidVolume[sc.Index] = xMaxBidVolume;
    MaxAskVolume[sc.Index] = xMaxAskVolume;
+   
+   LOBCurBidVolume[sc.Index] = xLOBCurBidVolume;
+   LOBCurAskVolume[sc.Index] = xLOBCurAskVolume;
+   VWAPPrice[sc.Index] = xVWAPPrice;
+   CurPrice[sc.Index] = sc.Close[sc.Index];
    
    /*
    if (MaxBidVolume > MaxAskVolume)
