@@ -367,10 +367,10 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       return;
 
    unsigned int xMaxBidVolume = 0, xMaxAskVolume = 0, MaxVolume = 0;
-   int TBV = 0, TAV = 0; // per bar
-   long TV = 0L; // Total volume for the bar
+   unsigned int TBV = 0, TAV = 0; // per bar
+   unsigned long TV = 0L; // Total volume for the bar
    float PTV = 0.0; // Price x total volume, used for VWAP calculation
-   long xVWAPPrice;
+   float xVWAPPrice;
    int DV = 0;
    float MaxBidVolumePrice = 0.0, MaxAskVolumePrice = 0.0, MaxVolumePrice = 0.0, TOT = 0.0;
    float ZPBPrice = 0.0, ZPAPrice = 0.0;
@@ -733,6 +733,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    VolumePerTick[sc.Index] = TOT / Count;
    Candle_Size[sc.Index] = (sc.High[sc.Index] - sc.Low[sc.Index]) / sc.TickSize;
    AverageVolume[sc.Index] = (TBV + TAV) / Candle_Size[sc.Index];
+   VWAPPrice[sc.Index] = xVWAPPrice;
    
    LOBMinBidVAP[sc.Index] = xLOBMinBidVAP;
    LOBMinAskVAP[sc.Index] = xLOBMinAskVAP;
@@ -760,8 +761,10 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    
    LOBCurBidVolume[sc.Index] = xLOBCurBidVolume;
    LOBCurAskVolume[sc.Index] = xLOBCurAskVolume;
-   VWAPPrice[sc.Index] = xVWAPPrice;
    CurPrice[sc.Index] = sc.Close[sc.Index];
+	VWAPPrice.DrawStyle = DRAWSTYLE_LINE;
+	VWAPPrice.LineWidth = 2;
+	VWAPPrice.PrimaryColor = RGB(255,0,255); // purple/magenta
    
    /*
    if (MaxBidVolume > MaxAskVolume)
