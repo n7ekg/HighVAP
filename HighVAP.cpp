@@ -271,12 +271,12 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       LOBMinAskVAP.PrimaryColor = COLOR_GREEN;
 
       LOBMaxBidVAP.Name = "LOBMaxBidVAP";
-      LOBMaxBidVAP.DrawStyle = DRAWSTYLE_LINE;
+      LOBMaxBidVAP.DrawStyle = DRAWSTYLE_IGNORE;
       LOBMaxBidVAP.LineWidth = 5;
       LOBMaxBidVAP.PrimaryColor = RGB(128,255,255); // light cyan
 
       LOBMaxAskVAP.Name = "LOBMaxAskVAP";
-      LOBMaxAskVAP.DrawStyle = DRAWSTYLE_LINE;
+      LOBMaxAskVAP.DrawStyle = DRAWSTYLE_IGNORE;
       LOBMaxAskVAP.LineWidth = 5;
       LOBMaxAskVAP.PrimaryColor = RGB(255,128,128); // light red
 
