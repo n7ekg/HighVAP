@@ -37,7 +37,7 @@ int InLowPin(float PRICE)
 */
 
 char scratchmsg[255];
-SCDLLName("High Volume At Price v0.4b") 
+SCDLLName("High Volume At Price v0.4c") 
 
 SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 {
@@ -105,7 +105,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       sc.FreeDLL = 0;
 	  sc.DrawStudyUnderneathMainPriceGraph = 1;
 
-      sc.GraphName = "High Volume At Price v0.4b";
+      sc.GraphName = "High Volume At Price v0.4c";
       sc.StudyDescription = "Display various statistics for each bar.";
       sc.AutoLoop = 1;
       sc.GraphRegion = 0;
@@ -681,7 +681,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		 
 		 // Buy Imbalance
 		 // if (AskArray[ElementIndex] > (BidArray[ElementIndex-1] * ImbRatio) && AskArray[ElementIndex-1] == 0 && AskArray[ElementIndex] > BidArray[ElementIndex])
-		 if (AskArray[ElementIndex+1] > (BidArray[ElementIndex] * ImbRatio) && ElementIndex < 2) // && AskArray[ElementIndex] > BidArray[ElementIndex])
+		 if (AskArray[ElementIndex+1] > (BidArray[ElementIndex] * ImbRatio) && (ElementIndex < 2 || (ElementIndex < Count - 1 && ElementIndex > Count - 3))) // && AskArray[ElementIndex] > BidArray[ElementIndex])
 		 {
 			 if (DebugLog.GetInt() == 1)
 			 {
@@ -695,7 +695,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		 
 		 // Sell Imbalance
 		 // if ((AskArray[ElementIndex+1] * ImbRatio) < BidArray[ElementIndex] && BidArray[ElementIndex+1] == 0 && BidArray[ElementIndex] > AskArray[ElementIndex])
-		 if ((BidArray[ElementIndex]) > (AskArray[ElementIndex+1] * ImbRatio) && ElementIndex < Count - 1 && ElementIndex > Count - 3) // && AskArray[ElementIndex] < BidArray[ElementIndex])
+		 if ((BidArray[ElementIndex]) > (AskArray[ElementIndex+1] * ImbRatio) && (ElementIndex < 2 || (ElementIndex < Count - 1 && ElementIndex > Count - 3))) // && AskArray[ElementIndex] < BidArray[ElementIndex])
 		 {
 			 if (DebugLog.GetInt() == 1)
 			 {
