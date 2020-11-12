@@ -37,7 +37,7 @@ int InLowPin(float PRICE)
 */
 
 char scratchmsg[255];
-SCDLLName("High Volume At Price v0.4") 
+SCDLLName("High Volume At Price v0.4b") 
 
 SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 {
@@ -105,7 +105,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       sc.FreeDLL = 0;
 	  sc.DrawStudyUnderneathMainPriceGraph = 1;
 
-      sc.GraphName = "High Volume At Price v0.4";
+      sc.GraphName = "High Volume At Price v0.4b";
       sc.StudyDescription = "Display various statistics for each bar.";
       sc.AutoLoop = 1;
       sc.GraphRegion = 0;
@@ -634,6 +634,11 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 
 	}
 	
+   /**********************************************************
+    * Zero print and buy/sell imbalance detection code START *
+	**********************************************************/
+   
+   AIMBPrice = BIMBPrice = 0.0;
    for (int ElementIndex = 0; ElementIndex < Count; ElementIndex++)
    {
 	  // s_VolumeAtPriceV2* p_VolumeAtPriceAtIndex = 0;
@@ -667,40 +672,51 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		 // if (p_VolumeAtPriceAtIndex->BidVolume > 0 && p_VolumeAtPriceAtIndex->AskVolume < TRIGGER && ElementIndex > 0 && ElementIndex < Count - 1 && ZPAPrice == 0.0) ZPAPrice = p_VolumeAtPriceAtIndex->PriceInTicks * sc.TickSize;
 		 if (ElementIndex > 0 && ElementIndex < Count - 1 )
 		 {
-			 AIMBPrice = 0.0;
-			 BIMBPrice = 0.0;
+			 //AIMBPrice = 0.0;
+			 //BIMBPrice = 0.0;
 			 if (p_VolumeAtPriceAtIndex->BidVolume < TRIGGER && p_VolumeAtPriceAtIndex->AskVolume > 0 && ZPBPrice == 0.0) ZPB[sc.Index] = p_VolumeAtPriceAtIndex->PriceInTicks * sc.TickSize;
 			 if (p_VolumeAtPriceAtIndex->BidVolume > 0 && p_VolumeAtPriceAtIndex->AskVolume < TRIGGER && ZPAPrice == 0.0) ZPA[sc.Index] = p_VolumeAtPriceAtIndex->PriceInTicks * sc.TickSize;
-			 // if (BIMBPrice == 0.0 && p_VolumeAtPriceAtIndex->AskVolume > (p_VolumeAtPriceAtIndex->BidVolume * ImbRatio)) BIMB[sc.Index] = p_VolumeAtPriceAtIndex->PriceInTicks * sc.TickSize;
-			 
-			 // Buy Imbalance
-			 // if (AskArray[ElementIndex] > (BidArray[ElementIndex-1] * ImbRatio) && AskArray[ElementIndex-1] == 0 && AskArray[ElementIndex] > BidArray[ElementIndex])
-			 if (AskArray[ElementIndex] * ImbRatio > (BidArray[ElementIndex-1]) && AskArray[ElementIndex] > BidArray[ElementIndex])
-			 {
-				 // sprintf(scratchmsg, "Buy Imbalance: AskVolume[%d] (%d) * %d (%d) > BidVolume[%d] (%d)\n",
-					// ElementIndex, AskArray[ElementIndex], ImbRatio, (AskArray[ElementIndex] * ImbRatio), ElementIndex-1, BidArray[ElementIndex-1]);
-				 // sc.AddMessageToLog(scratchmsg, 1);
-				 AIMBPrice = PriceArray[ElementIndex];
-				 BIMBPrice = 0.0;
-			 }
-			 
-			 // Sell Imbalance
-			 // if ((AskArray[ElementIndex+1] * ImbRatio) < BidArray[ElementIndex] && BidArray[ElementIndex+1] == 0 && BidArray[ElementIndex] > AskArray[ElementIndex])
-			 if ((AskArray[ElementIndex+1]) < BidArray[ElementIndex] * ImbRatio && AskArray[ElementIndex] < BidArray[ElementIndex])
-			 {
-				 // sprintf(scratchmsg, "Sell Imbalance: (AskVolume[%d]) (%d) < BidVolume[%d] (%d) * %d (%d)\n",
-					// ElementIndex+1, AskArray[ElementIndex], ElementIndex, BidArray[ElementIndex], ImbRatio, (BidArray[ElementIndex] * ImbRatio));
-				 // sc.AddMessageToLog(scratchmsg, 1);
-				 BIMBPrice = PriceArray[ElementIndex];
-				 AIMBPrice = 0.0;
-			 }
-			 if (AIMBPrice == BIMBPrice) AIMBPrice = BIMBPrice = 0.0; // If imbalances at the same price, set to 0
 		 }
+		 // if (BIMBPrice == 0.0 && p_VolumeAtPriceAtIndex->AskVolume > (p_VolumeAtPriceAtIndex->BidVolume * ImbRatio)) BIMB[sc.Index] = p_VolumeAtPriceAtIndex->PriceInTicks * sc.TickSize;
+		 
+		 // Buy Imbalance
+		 // if (AskArray[ElementIndex] > (BidArray[ElementIndex-1] * ImbRatio) && AskArray[ElementIndex-1] == 0 && AskArray[ElementIndex] > BidArray[ElementIndex])
+		 if (AskArray[ElementIndex+1] > (BidArray[ElementIndex] * ImbRatio) && ElementIndex < 2) // && AskArray[ElementIndex] > BidArray[ElementIndex])
+		 {
+			 if (DebugLog.GetInt() == 1)
+			 {
+				 sprintf(scratchmsg, "Buy Imbalance: AskVolume[%d] (%d) > BidVolume[%d] (%d) * %d (%d)\n",
+				 ElementIndex+1, AskArray[ElementIndex+1], ElementIndex, BidArray[ElementIndex], ImbRatio, BidArray[ElementIndex] * ImbRatio);
+				 sc.AddMessageToLog(scratchmsg, 1);
+			 }
+			 AIMBPrice = PriceArray[ElementIndex+1];
+			 // BIMBPrice = 0.0;
+		 }
+		 
+		 // Sell Imbalance
+		 // if ((AskArray[ElementIndex+1] * ImbRatio) < BidArray[ElementIndex] && BidArray[ElementIndex+1] == 0 && BidArray[ElementIndex] > AskArray[ElementIndex])
+		 if ((BidArray[ElementIndex]) > (AskArray[ElementIndex+1] * ImbRatio) && ElementIndex < Count - 1 && ElementIndex > Count - 3) // && AskArray[ElementIndex] < BidArray[ElementIndex])
+		 {
+			 if (DebugLog.GetInt() == 1)
+			 {
+				 sprintf(scratchmsg, "Sell Imbalance: (BidVolume[%d]) (%d) > AskVolume[%d] (%d) * %d (%d)\n",
+				 ElementIndex, BidArray[ElementIndex], ElementIndex+1, AskArray[ElementIndex+1], ImbRatio, ElementIndex+1, AskArray[ElementIndex+1] * ImbRatio);
+				 sc.AddMessageToLog(scratchmsg, 1);
+			 }
+			 BIMBPrice = PriceArray[ElementIndex];
+			 // AIMBPrice = 0.0;
+		 }
+		 if (AIMBPrice == BIMBPrice) AIMBPrice = BIMBPrice = 0.0; // If imbalances at the same price, set to 0		 
 
 		 TBV = TBV + p_VolumeAtPriceAtIndex->BidVolume;
 		 TAV = TAV + p_VolumeAtPriceAtIndex->AskVolume;
       }
    }
+   /********************************************************
+    * Zero print and buy/sell imbalance detection code END *
+	********************************************************/
+   
+
 
    	/*
 	sprintf(scratchmsg, "BidV=%d, AskV=%d, MaxV=%d\n", MaxBidVolume, MaxAskVolume, MaxVolume);
@@ -717,9 +733,9 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    TotalAskVolume[sc.Index] = TAV;
    DV = (int)TAV - (int)TBV;
    DeltaVolume[sc.Index] = DV;
-   if (DV == 0) DeltaVolume.PrimaryColor = COLOR_YELLOW;
-   if (DV < 0) DeltaVolume.PrimaryColor = RGB(255,128,128); // light red
-   if (DV > 0) DeltaVolume.PrimaryColor = COLOR_GREEN;
+   //if (DV == 0) DeltaVolume.PrimaryColor = COLOR_YELLOW;
+   //if (DV < 0) DeltaVolume.PrimaryColor = RGB(255,128,128); // light red
+   //if (DV > 0) DeltaVolume.PrimaryColor = COLOR_GREEN;
    TOT = TAV + TBV;
    TotalBidVolumePercent[sc.Index] = (TBV / TOT) * 100.0;
    TotalAskVolumePercent[sc.Index] = (TAV / TOT) * 100.0;
