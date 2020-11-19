@@ -37,10 +37,16 @@ int InLowPin(float PRICE)
 */
 
 char scratchmsg[255];
-SCDLLName("High Volume At Price v0.4c") 
+SCDLLName("High Volume At Price v0.4d") 
 
 SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 {
+	SCInputRef ImbalanceRatio = sc.Input[0];
+	SCInputRef MinimumBarSize = sc.Input[1];
+	SCInputRef CompareLevels = sc.Input[2];
+	SCInputRef DebugLog = sc.Input[3];
+	SCInputRef MarketDepthLimit = sc.Input[4];
+
 	SCSubgraphRef MaxBidVAP = sc.Subgraph[0];
 	SCSubgraphRef MaxAskVAP = sc.Subgraph[1];
 	SCSubgraphRef MaxVAP = sc.Subgraph[2];
@@ -53,49 +59,45 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	SCSubgraphRef TotalAskVolumePerTick = sc.Subgraph[9];
 	SCSubgraphRef ZPB = sc.Subgraph[10];
 	SCSubgraphRef ZPA = sc.Subgraph[11];
-	SCSubgraphRef BuyImbalance = sc.Subgraph[12];
-	SCSubgraphRef SellImbalance = sc.Subgraph[13];
-	SCSubgraphRef AverageVolume = sc.Subgraph[14];
-	SCSubgraphRef VolumePerTick = sc.Subgraph[15];
-	SCSubgraphRef DeltaVolume = sc.Subgraph[16];
-	SCSubgraphRef Candle_Size = sc.Subgraph[17];
-	SCSubgraphRef ReducingVolumeBidTop = sc.Subgraph[18];
-	SCSubgraphRef ReducingVolumeBidBot = sc.Subgraph[19];
-	SCSubgraphRef ReducingVolumeAskTop = sc.Subgraph[20];
-	SCSubgraphRef ReducingVolumeAskBot = sc.Subgraph[21];
+	SCSubgraphRef BuyImbalanceHi = sc.Subgraph[12];
+	SCSubgraphRef SellImbalanceHi = sc.Subgraph[13];
+	SCSubgraphRef BuyImbalanceLo = sc.Subgraph[14];
+	SCSubgraphRef SellImbalanceLo = sc.Subgraph[15];
+	SCSubgraphRef AverageVolume = sc.Subgraph[16];
+	SCSubgraphRef VolumePerTick = sc.Subgraph[17];
+	SCSubgraphRef DeltaVolume = sc.Subgraph[18];
+	SCSubgraphRef Candle_Size = sc.Subgraph[19];
+	SCSubgraphRef ReducingVolumeBidTop = sc.Subgraph[20];
+	SCSubgraphRef ReducingVolumeBidBot = sc.Subgraph[21];
+	SCSubgraphRef ReducingVolumeAskTop = sc.Subgraph[22];
+	SCSubgraphRef ReducingVolumeAskBot = sc.Subgraph[23];
 	
-	SCSubgraphRef LOBMinBidVAP = sc.Subgraph[22];
-	SCSubgraphRef LOBMinAskVAP = sc.Subgraph[23];
-	SCSubgraphRef LOBMaxBidVAP = sc.Subgraph[24];
-	SCSubgraphRef LOBMaxAskVAP = sc.Subgraph[25];
-	SCSubgraphRef LOBTotalBidVolume = sc.Subgraph[26];
-	SCSubgraphRef LOBTotalAskVolume = sc.Subgraph[27];
-	SCSubgraphRef LOBTotalBidVolumePercent = sc.Subgraph[28];
-	SCSubgraphRef LOBTotalAskVolumePercent = sc.Subgraph[29];
-	SCSubgraphRef LOBDeltaVolume = sc.Subgraph[30];
-	SCSubgraphRef LOBMinBidVolume = sc.Subgraph[31];
-	SCSubgraphRef LOBMinAskVolume = sc.Subgraph[32];
-	SCSubgraphRef LOBMaxBidVolume = sc.Subgraph[33];
-	SCSubgraphRef LOBMaxAskVolume = sc.Subgraph[34];
-	SCSubgraphRef LOBValidFlag = sc.Subgraph[35];
-	SCSubgraphRef LOBAvgBidVolume = sc.Subgraph[36];
-	SCSubgraphRef LOBAvgAskVolume = sc.Subgraph[37];
-	SCSubgraphRef LOBAvgVolume = sc.Subgraph[38];
+	SCSubgraphRef LOBMinBidVAP = sc.Subgraph[24];
+	SCSubgraphRef LOBMinAskVAP = sc.Subgraph[25];
+	SCSubgraphRef LOBMaxBidVAP = sc.Subgraph[26];
+	SCSubgraphRef LOBMaxAskVAP = sc.Subgraph[27];
+	SCSubgraphRef LOBTotalBidVolume = sc.Subgraph[28];
+	SCSubgraphRef LOBTotalAskVolume = sc.Subgraph[29];
+	SCSubgraphRef LOBTotalBidVolumePercent = sc.Subgraph[30];
+	SCSubgraphRef LOBTotalAskVolumePercent = sc.Subgraph[31];
+	SCSubgraphRef LOBDeltaVolume = sc.Subgraph[32];
+	SCSubgraphRef LOBMinBidVolume = sc.Subgraph[33];
+	SCSubgraphRef LOBMinAskVolume = sc.Subgraph[34];
+	SCSubgraphRef LOBMaxBidVolume = sc.Subgraph[35];
+	SCSubgraphRef LOBMaxAskVolume = sc.Subgraph[36];
+	SCSubgraphRef LOBValidFlag = sc.Subgraph[37];
+	SCSubgraphRef LOBAvgBidVolume = sc.Subgraph[38];
+	SCSubgraphRef LOBAvgAskVolume = sc.Subgraph[39];
+	SCSubgraphRef LOBAvgVolume = sc.Subgraph[40];
 
-	SCSubgraphRef MaxBidVolume = sc.Subgraph[39];
-	SCSubgraphRef MaxAskVolume = sc.Subgraph[40];
+	SCSubgraphRef MaxBidVolume = sc.Subgraph[41];
+	SCSubgraphRef MaxAskVolume = sc.Subgraph[42];
 	
-	SCSubgraphRef LOBCurBidVolume = sc.Subgraph[41];
-	SCSubgraphRef LOBCurAskVolume = sc.Subgraph[42];
-	SCSubgraphRef CurPrice = sc.Subgraph[43];
-	SCSubgraphRef VWAPPrice = sc.Subgraph[44];
+	SCSubgraphRef LOBCurBidVolume = sc.Subgraph[43];
+	SCSubgraphRef LOBCurAskVolume = sc.Subgraph[44];
+	SCSubgraphRef CurPrice = sc.Subgraph[45];
+	SCSubgraphRef VWAPPrice = sc.Subgraph[46];
 	
-	SCInputRef ImbalanceRatio = sc.Input[0];
-	SCInputRef MinimumBarSize = sc.Input[1];
-	SCInputRef CompareLevels = sc.Input[2];
-	SCInputRef DebugLog = sc.Input[3];
-	SCInputRef MarketDepthLimit = sc.Input[4];
-
 	if (sc.HideStudy == 1)
 		return;
 
@@ -104,27 +106,28 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       // During development set this flag to 1, so the DLL can be modified. When development is done, set it to 0 to improve performance.
       sc.FreeDLL = 0;
 	  sc.DrawStudyUnderneathMainPriceGraph = 1;
+	  //sc.MaintainHistoricalMarketDepthData = 1;
+	  //sc.MaintainVolumeAtPriceData = 1;
 
-      sc.GraphName = "High Volume At Price v0.4c";
+      sc.GraphName = "High Volume At Price v0.4d";
       sc.StudyDescription = "Display various statistics for each bar.";
       sc.AutoLoop = 1;
       sc.GraphRegion = 0;
       sc.ScaleRangeType = SCALE_SAMEASREGION;
-      sc.MaintainVolumeAtPriceData = 1;
 
       MaxBidVAP.Name = "MaxBidVAP";
-      MaxBidVAP.DrawStyle = DRAWSTYLE_DASH;
-      MaxBidVAP.LineWidth = 2;
-      MaxBidVAP.PrimaryColor = RGB(255,128,128); // light red;;
+      MaxBidVAP.DrawStyle = DRAWSTYLE_IGNORE;
+      MaxBidVAP.LineWidth = 1;
+      MaxBidVAP.PrimaryColor = RGB(255,128,128); // light red
 
       MaxAskVAP.Name = "MaxAskVAP";
-      MaxAskVAP.DrawStyle = DRAWSTYLE_DASH;
-      MaxAskVAP.LineWidth = 2;
+      MaxAskVAP.DrawStyle = DRAWSTYLE_IGNORE;
+      MaxAskVAP.LineWidth = 1;
       MaxAskVAP.PrimaryColor = COLOR_GREEN;
 
       MaxVAP.Name = "MaxVAP";
       MaxVAP.DrawStyle = DRAWSTYLE_DASH;
-      MaxVAP.LineWidth = 3;
+      MaxVAP.LineWidth = 1;
       MaxVAP.PrimaryColor = COLOR_YELLOW;
 	  MaxVAP.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
 
@@ -171,7 +174,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       MaxBidVolume.Name = "MaxBidVolume";
       MaxBidVolume.DrawStyle = DRAWSTYLE_IGNORE;
       MaxBidVolume.LineWidth = 2;
-      MaxBidVolume.PrimaryColor = RGB(255,128,128); // light red;;
+      MaxBidVolume.PrimaryColor = RGB(255,128,128); // light red
 
       MaxAskVolume.Name = "MaxAskVolume";
       MaxAskVolume.DrawStyle = DRAWSTYLE_IGNORE;
@@ -188,21 +191,33 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       ZPA.LineWidth = 2;
       ZPA.PrimaryColor = RGB(255,128,128); // light red;
 
-      BuyImbalance.Name = "Buy Imbalance";
-      BuyImbalance.DrawStyle = DRAWSTYLE_DASH;
-      BuyImbalance.LineWidth = 2;
-      BuyImbalance.PrimaryColor = RGB(0,255,255); // cyan
-	  BuyImbalance.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
+      BuyImbalanceHi.Name = "Buy Imbalance Top";
+      BuyImbalanceHi.DrawStyle = DRAWSTYLE_DASH;
+      BuyImbalanceHi.LineWidth = 1;
+      BuyImbalanceHi.PrimaryColor = RGB(0,255,255); // cyan
+	  BuyImbalanceHi.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
 
-      SellImbalance.Name = "Sell Imbalance";
-      SellImbalance.DrawStyle = DRAWSTYLE_DASH;
-      SellImbalance.LineWidth = 2;
-      SellImbalance.PrimaryColor = RGB(255,128,128); // light red;
-	  SellImbalance.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
+      SellImbalanceHi.Name = "Sell Imbalance Top";
+      SellImbalanceHi.DrawStyle = DRAWSTYLE_DASH;
+      SellImbalanceHi.LineWidth = 1;
+      SellImbalanceHi.PrimaryColor = RGB(255,128,128); // light red;
+	  SellImbalanceHi.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
+	  
+      BuyImbalanceLo.Name = "Buy Imbalance Bottom";
+      BuyImbalanceLo.DrawStyle = DRAWSTYLE_DASH;
+      BuyImbalanceLo.LineWidth = 1;
+      BuyImbalanceLo.PrimaryColor = RGB(0,255,255); // cyan
+	  BuyImbalanceLo.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
+
+      SellImbalanceLo.Name = "Sell Imbalance Bottom";
+      SellImbalanceLo.DrawStyle = DRAWSTYLE_DASH;
+      SellImbalanceLo.LineWidth = 1;
+      SellImbalanceLo.PrimaryColor = RGB(255,128,128); // light red;
+	  SellImbalanceLo.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
 	  
 	  ImbalanceRatio.Name = "Imbalance Ratio";
-	  ImbalanceRatio.SetInt(4);
-	  //ImbalanceRatio.SetIntLimits(1,8);
+	  ImbalanceRatio.SetInt(3);
+	  ImbalanceRatio.SetIntLimits(1,8);
 	  
 	  MinimumBarSize.Name = "Minimum Size For Bar";
 	  MinimumBarSize.SetInt(5);
@@ -217,7 +232,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	  DebugLog.SetIntLimits(0,1);
 	  
 	  MarketDepthLimit.Name = "Limit To Levels Of Market Depth Analysis";
-	  MarketDepthLimit.SetInt(7);
+	  MarketDepthLimit.SetInt(20);
 	  MarketDepthLimit.SetIntLimits(1,999);
 	  
 	  VolumePerTick.Name = "Volume Per Tick";
@@ -232,8 +247,9 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 
       VWAPPrice.Name = "VWAP Price";
       VWAPPrice.DrawStyle = DRAWSTYLE_DASH;
-      VWAPPrice.LineWidth = 2;
+      VWAPPrice.LineWidth = 1;
       VWAPPrice.PrimaryColor = RGB(255,0,255); // purple/magenta
+	  VWAPPrice.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
 
 	  Candle_Size.Name = "Candle Size";
       Candle_Size.DrawStyle = DRAWSTYLE_IGNORE;
@@ -241,34 +257,34 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       Candle_Size.PrimaryColor = RGB(0,255,255); // cyan
 	  
 	  ReducingVolumeBidTop.Name = "Reducing Volume Bid Top";
-      ReducingVolumeBidTop.DrawStyle = DRAWSTYLE_FILL_RECTANGLE_TOP;
+      ReducingVolumeBidTop.DrawStyle = DRAWSTYLE_TRANSPARENT_FILL_RECTANGLE_TOP;
       ReducingVolumeBidTop.LineWidth = 2;
-      ReducingVolumeBidTop.PrimaryColor = RGB(0,128,0); // dark green
+      ReducingVolumeBidTop.PrimaryColor = RGB(0,255,0); // dark green
 
 	  ReducingVolumeBidBot.Name = "Reducing Volume Bid Bottom";
-      ReducingVolumeBidBot.DrawStyle = DRAWSTYLE_FILL_RECTANGLE_BOTTOM;
+      ReducingVolumeBidBot.DrawStyle = DRAWSTYLE_TRANSPARENT_FILL_RECTANGLE_BOTTOM;
       ReducingVolumeBidBot.LineWidth = 2;
-      ReducingVolumeBidBot.PrimaryColor = RGB(0,128,0); // dark green
+      ReducingVolumeBidBot.PrimaryColor = RGB(0,255,0); // dark green
 
 	  ReducingVolumeAskTop.Name = "Reducing Volume Ask Top";
-      ReducingVolumeAskTop.DrawStyle = DRAWSTYLE_FILL_RECTANGLE_TOP;
+      ReducingVolumeAskTop.DrawStyle = DRAWSTYLE_TRANSPARENT_FILL_RECTANGLE_TOP;
       ReducingVolumeAskTop.LineWidth = 2;
-      ReducingVolumeAskTop.PrimaryColor = RGB(128,64,64); // dark red
+      ReducingVolumeAskTop.PrimaryColor = RGB(255,0,0); // dark red
 
 	  ReducingVolumeAskBot.Name = "Reducing Volume Ask Bottom";
-      ReducingVolumeAskBot.DrawStyle = DRAWSTYLE_FILL_RECTANGLE_BOTTOM;
+      ReducingVolumeAskBot.DrawStyle = DRAWSTYLE_TRANSPARENT_FILL_RECTANGLE_BOTTOM;
       ReducingVolumeAskBot.LineWidth = 2;
-      ReducingVolumeAskBot.PrimaryColor = RGB(128,64,64); // dark red
+      ReducingVolumeAskBot.PrimaryColor = RGB(255,0,0); // dark red
 
       LOBMinBidVAP.Name = "LOBMinBidVAP";
       LOBMinBidVAP.DrawStyle = DRAWSTYLE_IGNORE;
       LOBMinBidVAP.LineWidth = 2;
-      LOBMinBidVAP.PrimaryColor = RGB(255,128,128); // light red
+      LOBMinBidVAP.PrimaryColor = RGB(128,255,255); // light cyan
 
       LOBMinAskVAP.Name = "LOBMinAskVAP";
       LOBMinAskVAP.DrawStyle = DRAWSTYLE_IGNORE;
       LOBMinAskVAP.LineWidth = 2;
-      LOBMinAskVAP.PrimaryColor = COLOR_GREEN;
+      LOBMinAskVAP.PrimaryColor = RGB(255,128,128); // light red
 
       LOBMaxBidVAP.Name = "LOBMaxBidVAP";
       LOBMaxBidVAP.DrawStyle = DRAWSTYLE_IGNORE;
@@ -374,7 +390,8 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    int DV = 0;
    float MaxBidVolumePrice = 0.0, MaxAskVolumePrice = 0.0, MaxVolumePrice = 0.0, TOT = 0.0;
    float ZPBPrice = 0.0, ZPAPrice = 0.0;
-   float BIMBPrice = 0.0, AIMBPrice = 0.0;
+   float BIMBPriceHi = 0.0, AIMBPriceHi = 0.0;
+   float BIMBPriceLo = 0.0, AIMBPriceLo = 0.0;
    float RVBTPrice = 0.0, RVATPrice = 0.0; // Reducing Volume Bid/Ask Top Price
    float RVBBPrice = 0.0, RVABPrice = 0.0; // Reducing Volume Bid/Ask Bottom Price
    unsigned int i;
@@ -411,6 +428,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    int xLOBCurBidVolume = 0;
    int xLOBCurAskVolume = 0;
    float xCurPrice = 0.0;
+   int CountBuyImb = 0, CountSellImb = 0;
    
    s_VolumeAtPriceV2* p_VolumeAtPriceAtIndex = 0;
    s_MarketDepthEntry DepthEntry;
@@ -554,7 +572,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 // Index=1, BidVolume=0, AskVolume=3, Price=3069.75
 // Index=0, BidVolume=1, AskVolume=20, Price=3069.50
 	
-	ReducingVolumeBidBot[sc.Index] = ReducingVolumeBidTop[sc.Index] = ReducingVolumeAskBot[sc.Index] = ReducingVolumeAskTop[sc.Index] = 0;
+	ReducingVolumeBidBot[sc.Index] = ReducingVolumeBidTop[sc.Index] = ReducingVolumeAskBot[sc.Index] = ReducingVolumeAskTop[sc.Index] = 0.0;
 	
 	/*********************************************************
 	 *  R E D U C I N G   V O L U M E   C O D E   S T A R T  *
@@ -628,6 +646,11 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 			// ReducingVolumeBidTop[sc.Index] = 0;
 		}
 
+		if (DebugLog.GetInt() == 1)
+		{
+			sprintf(scratchmsg, "RVAT=%f, RVBT=%f\n", ReducingVolumeAskTop[sc.Index], ReducingVolumeBidTop[sc.Index]);
+			sc.AddMessageToLog(scratchmsg, 1);
+		}
 	/*****************************************************
 	 *  R E D U C I N G   V O L U M E   C O D E   E N D  *
 	 *****************************************************/
@@ -638,14 +661,15 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
     * Zero print and buy/sell imbalance detection code START *
 	**********************************************************/
    
-   AIMBPrice = BIMBPrice = 0.0;
+   AIMBPriceHi = BIMBPriceHi = AIMBPriceLo = BIMBPriceLo = 0.0;
+   CountBuyImb = CountSellImb = 0;
    for (int ElementIndex = 0; ElementIndex < Count; ElementIndex++)
    {
 	  // s_VolumeAtPriceV2* p_VolumeAtPriceAtIndex = 0;
       sc.VolumeAtPriceForBars->GetVAPElementAtIndex(sc.Index, ElementIndex, &p_VolumeAtPriceAtIndex);
 	  ZPA[ElementIndex] = ZPB[ElementIndex] = 0; // Clear out zero prints
 
-      if (p_VolumeAtPriceAtIndex)
+      if (p_VolumeAtPriceAtIndex && Count > 2)
       {
 		  // sprintf(scratchmsg, "ElementIndex=%d, Price=%.02f\n", ElementIndex, p_VolumeAtPriceAtIndex->PriceInTicks * sc.TickSize);
 		  // sc.AddMessageToLog(scratchmsg, 1);
@@ -681,42 +705,102 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		 
 		 // Buy Imbalance
 		 // if (AskArray[ElementIndex] > (BidArray[ElementIndex-1] * ImbRatio) && AskArray[ElementIndex-1] == 0 && AskArray[ElementIndex] > BidArray[ElementIndex])
-		 if (AskArray[ElementIndex+1] > (BidArray[ElementIndex] * ImbRatio) && (ElementIndex < 2 || (ElementIndex < Count - 1 && ElementIndex > Count - 3))) // && AskArray[ElementIndex] > BidArray[ElementIndex])
+		 if (DebugLog.GetInt() == 1)
+		 {
+			 sprintf(scratchmsg, "IMB: Count=%d, ElementIndex=%d, AskArray+1=%d, BidArray=%d\n", Count, ElementIndex, AskArray[ElementIndex+1], BidArray[ElementIndex]);
+			 sc.AddMessageToLog(scratchmsg, 1);
+		 }
+		 if (AskArray[ElementIndex+1] >= (BidArray[ElementIndex] * ImbRatio) && ElementIndex+1 < Count) // && AskArray[ElementIndex] > BidArray[ElementIndex])
 		 {
 			 if (DebugLog.GetInt() == 1)
 			 {
-				 sprintf(scratchmsg, "Buy Imbalance: AskVolume[%d] (%d) > BidVolume[%d] (%d) * %d (%d)\n",
-				 ElementIndex+1, AskArray[ElementIndex+1], ElementIndex, BidArray[ElementIndex], ImbRatio, BidArray[ElementIndex] * ImbRatio);
+				 sprintf(scratchmsg, "Buy Imbalance: AskVolume[%d] (%d) > BidVolume[%d] (%d) * %d (%d) | ElementIndex=%d, Count=%d\n",
+				 ElementIndex+1, AskArray[ElementIndex+1], ElementIndex, BidArray[ElementIndex], ImbRatio, BidArray[ElementIndex] * ImbRatio, ElementIndex, Count);
 				 sc.AddMessageToLog(scratchmsg, 1);
 			 }
-			 AIMBPrice = PriceArray[ElementIndex+1];
+			 CountBuyImb++;
+			 /*
+			 if (Count >=5)
+			 {
+				 if (ElementIndex == 2) AIMBPriceLo = PriceArray[ElementIndex+1];
+				 if (ElementIndex == 1) AIMBPriceLo = PriceArray[ElementIndex+1];
+				 if (ElementIndex == 0) AIMBPriceLo = PriceArray[ElementIndex+1];
+
+				 if (ElementIndex == (Count - 3)) AIMBPriceHi = PriceArray[ElementIndex+1];
+				 if (ElementIndex == (Count - 2)) AIMBPriceHi = PriceArray[ElementIndex+1];
+				 if (ElementIndex == (Count - 1)) AIMBPriceHi = PriceArray[ElementIndex+1];
+			 }
+			 */
 			 // BIMBPrice = 0.0;
 		 }
 		 
 		 // Sell Imbalance
 		 // if ((AskArray[ElementIndex+1] * ImbRatio) < BidArray[ElementIndex] && BidArray[ElementIndex+1] == 0 && BidArray[ElementIndex] > AskArray[ElementIndex])
-		 if ((BidArray[ElementIndex]) > (AskArray[ElementIndex+1] * ImbRatio) && (ElementIndex < 2 || (ElementIndex < Count - 1 && ElementIndex > Count - 3))) // && AskArray[ElementIndex] < BidArray[ElementIndex])
+		 if ((BidArray[ElementIndex]) >= (AskArray[ElementIndex+1] * ImbRatio) && ElementIndex+1 < Count) // && AskArray[ElementIndex] < BidArray[ElementIndex])
 		 {
 			 if (DebugLog.GetInt() == 1)
 			 {
-				 sprintf(scratchmsg, "Sell Imbalance: (BidVolume[%d]) (%d) > AskVolume[%d] (%d) * %d (%d)\n",
-				 ElementIndex, BidArray[ElementIndex], ElementIndex+1, AskArray[ElementIndex+1], ImbRatio, ElementIndex+1, AskArray[ElementIndex+1] * ImbRatio);
+				 sprintf(scratchmsg, "Sell Imbalance: (BidVolume[%d]) (%d) > AskVolume[%d] (%d) * %d (%d) | ElementIndex=%d, Count=%d\n",
+				 ElementIndex, BidArray[ElementIndex], ElementIndex+1, AskArray[ElementIndex+1], ImbRatio, ElementIndex+1, AskArray[ElementIndex+1] * ImbRatio, ElementIndex, Count);
 				 sc.AddMessageToLog(scratchmsg, 1);
 			 }
-			 BIMBPrice = PriceArray[ElementIndex];
+			 CountSellImb++;
+			 /*
+			 if (Count >=5)
+			 {
+				 if (ElementIndex == 2) BIMBPriceLo = PriceArray[ElementIndex];
+				 if (ElementIndex == 1) BIMBPriceLo = PriceArray[ElementIndex];
+				 if (ElementIndex == 0) BIMBPriceLo = PriceArray[ElementIndex];
+				 
+				 if (ElementIndex == (Count - 3)) BIMBPriceHi = PriceArray[ElementIndex];
+				 if (ElementIndex == (Count - 2)) BIMBPriceHi = PriceArray[ElementIndex];
+				 if (ElementIndex == (Count - 1)) BIMBPriceHi = PriceArray[ElementIndex];
+			 }
+			 */
 			 // AIMBPrice = 0.0;
 		 }
-		 if (AIMBPrice == BIMBPrice) AIMBPrice = BIMBPrice = 0.0; // If imbalances at the same price, set to 0		 
+		 // if (AIMBPriceHi == BIMBPriceHi) AIMBPriceHi = BIMBPriceHi = 0.0; // If imbalances at the same price, set to 0		 
+		 // if (AIMBPriceLo == BIMBPriceLo) AIMBPriceLo = BIMBPriceLo = 0.0; // If imbalances at the same price, set to 0		 
 
 		 TBV = TBV + p_VolumeAtPriceAtIndex->BidVolume;
 		 TAV = TAV + p_VolumeAtPriceAtIndex->AskVolume;
       }
    }
+   
+   /* New code to calculate buy/sell imbalances at the top or bottom of a bar */
+   
+	AIMBPriceHi = BIMBPriceHi = AIMBPriceLo = BIMBPriceLo = 0.0;
+   if (Count >=5)
+   {
+		/* Check buy/sell imbalance at the top of the bar */
+		for (int ElementIndex = Count - 3; ElementIndex < Count; ElementIndex++)
+		{
+			if (AskArray[ElementIndex] >= (BidArray[ElementIndex-1] * ImbRatio))
+				AIMBPriceHi = PriceArray[ElementIndex];
+			if ((BidArray[ElementIndex-1]) >= (AskArray[ElementIndex] * ImbRatio))
+				BIMBPriceHi = PriceArray[ElementIndex-1];
+		}
+		
+		/* Now do it at the bottom of the bar */
+		for (int ElementIndex = 2; ElementIndex >= 0; ElementIndex--)
+		{
+			if (AskArray[ElementIndex+1] >= (BidArray[ElementIndex] * ImbRatio))
+				AIMBPriceLo = PriceArray[ElementIndex+1];
+			if ((BidArray[ElementIndex]) >= (AskArray[ElementIndex+1] * ImbRatio))
+				BIMBPriceLo = PriceArray[ElementIndex];
+		}
+			
+   }
+   if (DebugLog.GetInt() == 1 && (CountBuyImb > 0 || CountSellImb > 0))
+   {
+	   sprintf(scratchmsg, "COUNTIMB: Buy=%d, Sell=%d\n", CountBuyImb, CountSellImb);
+	   sc.AddMessageToLog(scratchmsg, 1);
+   }
+   
    /********************************************************
     * Zero print and buy/sell imbalance detection code END *
 	********************************************************/
    
-
 
    	/*
 	sprintf(scratchmsg, "BidV=%d, AskV=%d, MaxV=%d\n", MaxBidVolume, MaxAskVolume, MaxVolume);
@@ -744,8 +828,10 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    if (ZPAPrice > 0.0) ZPA[sc.Index] = ZPAPrice;
    if (ZPBPrice > 0.0) ZPB[sc.Index] = ZPBPrice;
    // BuyImbalance[sc.Index] = SellImbalance[sc.Index] = 0.0;
-   BuyImbalance[sc.Index] = AIMBPrice;
-   SellImbalance[sc.Index] = BIMBPrice;
+   BuyImbalanceHi[sc.Index] = AIMBPriceHi;
+   SellImbalanceHi[sc.Index] = BIMBPriceHi;
+   BuyImbalanceLo[sc.Index] = AIMBPriceLo;
+   SellImbalanceLo[sc.Index] = BIMBPriceLo;
    VolumePerTick[sc.Index] = TOT / Count;
    Candle_Size[sc.Index] = (sc.High[sc.Index] - sc.Low[sc.Index]) / sc.TickSize;
    AverageVolume[sc.Index] = (TBV + TAV) / Candle_Size[sc.Index];
