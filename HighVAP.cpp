@@ -1,12 +1,4 @@
-/* Date: 2012-05-21
-   Version: 1.0
-   Author: Ymmv
-   http://www.bigmiketrading.com/sierra-chart-programming/20255-acsil-function-returns-price-highest-volume-within-bar.html
-   
-   This was the original code that only indicated where the highest volume was within a bar. I took it and heavily modified it.
-   
-   Copyright 2019, by Ed Carp. All rights reserved. Distribution without permission is prohibited.
-*/
+//   Copyright 2019, by Ed Carp. All rights reserved. Distribution without permission is prohibited.
 
 #include "sierrachart.h"
 #include "scstudyfunctions.h"
@@ -486,9 +478,6 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    if (LOBCount < MarketDepthLimit.GetInt()) LOBValidFlag[sc.Index] = 0;
    if (LOBCount > MarketDepthLimit.GetInt()) LOBCount = MarketDepthLimit.GetInt();
    
-	// sprintf(scratchmsg, "Count=%d\n", Count);
-	// sc.AddMessageToLog(scratchmsg, 1);
-
 	/*
 	for (i=0; i<1000; i++)
 	{
@@ -526,17 +515,6 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	}
 	xVWAPPrice = PTV / TV;
 	xCurPrice = PriceArray[0];
-
-// LOB: Count=10, Index=9, BidVolume=159, AskVolume=87, BidPrice=3091.75, AskPrice=3096.50
-// LOB: Count=10, Index=8, BidVolume=74, AskVolume=75, BidPrice=3092.00, AskPrice=3096.25
-// LOB: Count=10, Index=7, BidVolume=69, AskVolume=120, BidPrice=3092.25, AskPrice=3096.00
-// LOB: Count=10, Index=6, BidVolume=70, AskVolume=77, BidPrice=3092.50, AskPrice=3095.75
-// LOB: Count=10, Index=5, BidVolume=51, AskVolume=73, BidPrice=3092.75, AskPrice=3095.50
-// LOB: Count=10, Index=4, BidVolume=53, AskVolume=46, BidPrice=3093.00, AskPrice=3095.25
-// LOB: Count=10, Index=3, BidVolume=67, AskVolume=73, BidPrice=3093.25, AskPrice=3095.00
-// LOB: Count=10, Index=2, BidVolume=106, AskVolume=88, BidPrice=3093.50, AskPrice=3094.75
-// LOB: Count=10, Index=1, BidVolume=59, AskVolume=50, BidPrice=3093.75, AskPrice=3094.50
-// LOB: Count=10, Index=0, BidVolume=47, AskVolume=35, BidPrice=3094.00, AskPrice=3094.25
 
 	/* Get LOB resting order data */
 	for (int Level = LOBCount - 1; Level > -1; Level--)
@@ -584,34 +562,6 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	xLOBCurBidVolume = LOBBidArray[0];
 	xLOBCurAskVolume = LOBAskArray[0];
 
-
-// Count = 13
-// Index=12, BidVolume=0, AskVolume=6, Price=3052.00
-// Index=11, BidVolume=14, AskVolume=9, Price=3051.75
-// Index=10, BidVolume=31, AskVolume=164, Price=3051.50
-// Index=9, BidVolume=30, AskVolume=59, Price=3051.25
-// Index=8, BidVolume=34, AskVolume=17, Price=3051.00
-// Index=7, BidVolume=14, AskVolume=23, Price=3050.75
-// Index=6, BidVolume=38, AskVolume=70, Price=3050.50
-// Index=5, BidVolume=6, AskVolume=11, Price=3050.25
-// Index=4, BidVolume=14, AskVolume=27, Price=3050.00
-// Index=3, BidVolume=20, AskVolume=42, Price=3049.75
-// Index=2, BidVolume=37, AskVolume=12, Price=3049.50
-// Index=1, BidVolume=18, AskVolume=19, Price=3049.25
-// Index=0, BidVolume=1, AskVolume=0, Price=3049.00
-
-// Count = 10
-// Index=9, BidVolume=0, AskVolume=259, Price=3071.75
-// Index=8, BidVolume=54, AskVolume=80, Price=3071.50
-// Index=7, BidVolume=64, AskVolume=61, Price=3071.25
-// Index=6, BidVolume=22, AskVolume=54, Price=3071.00
-// Index=5, BidVolume=29, AskVolume=14, Price=3070.75
-// Index=4, BidVolume=26, AskVolume=8, Price=3070.50
-// Index=3, BidVolume=22, AskVolume=24, Price=3070.25
-// Index=2, BidVolume=15, AskVolume=12, Price=3070.00
-// Index=1, BidVolume=0, AskVolume=3, Price=3069.75
-// Index=0, BidVolume=1, AskVolume=20, Price=3069.50
-	
 	ReducingVolumeBidBot[sc.Index] = ReducingVolumeBidTop[sc.Index] = ReducingVolumeAskBot[sc.Index] = ReducingVolumeAskTop[sc.Index] = 0.0;
 	
 	/*********************************************************
@@ -630,9 +580,6 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		MyLow = LOW;
 		MyOpen = OPEN;
 		MyClose = CLOSE;
-		/* MyOpen == 3063.50 && MyHigh == 3067.25 && MyLow == 3063.00 && MyClose == 3065.75 */
-		/* MyOpen == 3066.00 && MyHigh == 3068.00 && MyLow == 3065.50 && MyClose == 3066.50 */
-		/* MyOpen == 3066.25 && MyHigh == 3066.75 && MyLow == 3062.75 && MyClose == 3064.25 */
 		
 		CompCount = 0;
 		for (i=0; i<CompLevels-1; i++)
@@ -653,8 +600,6 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		{
 			ReducingVolumeBidBot[sc.Index] = PriceArray[0];
 			ReducingVolumeBidTop[sc.Index] = PriceArray[CompLevels - 1];
-			// ReducingVolumeAskBot[sc.Index] = 0;
-			// ReducingVolumeAskTop[sc.Index] = 0;
 		}
 		
 		// if (AskArray[Count - 1] <= AskArray[Count - 2] && AskArray[Count - 2] <= AskArray[Count - 3]) // && BidArray[Count - 1] <= BidArray[Count - 2] && BidArray[Count - 2] <= BidArray[Count - 3])
@@ -682,8 +627,6 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		{
 			ReducingVolumeAskBot[sc.Index] = PriceArray[Count - CompLevels];
 			ReducingVolumeAskTop[sc.Index] = PriceArray[Count - 1];
-			// ReducingVolumeBidBot[sc.Index] = 0;
-			// ReducingVolumeBidTop[sc.Index] = 0;
 		}
 
 		if (DebugLog.GetInt() == 1)
@@ -733,8 +676,6 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		 }
 		 
 		 // Flag zero prints. We only want to flag the first entry, but don't flag the zero prints at the end of the bar.
-		 // if (p_VolumeAtPriceAtIndex->BidVolume < TRIGGER && p_VolumeAtPriceAtIndex->AskVolume > 0 && ElementIndex > 0 && ElementIndex < Count - 1 && ZPBPrice == 0.0) ZPBPrice = p_VolumeAtPriceAtIndex->PriceInTicks * sc.TickSize;
-		 // if (p_VolumeAtPriceAtIndex->BidVolume > 0 && p_VolumeAtPriceAtIndex->AskVolume < TRIGGER && ElementIndex > 0 && ElementIndex < Count - 1 && ZPAPrice == 0.0) ZPAPrice = p_VolumeAtPriceAtIndex->PriceInTicks * sc.TickSize;
 		 if (ElementIndex > 0 && ElementIndex < Count - 1 )
 		 {
 			 //AIMBPrice = 0.0;
@@ -750,7 +691,6 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 				 CountBuyZP++;
 			 }
 		 }
-		 // if (BIMBPrice == 0.0 && p_VolumeAtPriceAtIndex->AskVolume > (p_VolumeAtPriceAtIndex->BidVolume * ImbRatio)) BIMB[sc.Index] = p_VolumeAtPriceAtIndex->PriceInTicks * sc.TickSize;
 		 
 		 // Buy Imbalance
 		 // if (AskArray[ElementIndex] > (BidArray[ElementIndex-1] * ImbRatio) && AskArray[ElementIndex-1] == 0 && AskArray[ElementIndex] > BidArray[ElementIndex])
@@ -768,19 +708,6 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 				 sc.AddMessageToLog(scratchmsg, 1);
 			 }
 			 CountBuyImb++;
-			 /*
-			 if (Count >=5)
-			 {
-				 if (ElementIndex == 2) AIMBPriceLo = PriceArray[ElementIndex+1];
-				 if (ElementIndex == 1) AIMBPriceLo = PriceArray[ElementIndex+1];
-				 if (ElementIndex == 0) AIMBPriceLo = PriceArray[ElementIndex+1];
-
-				 if (ElementIndex == (Count - 3)) AIMBPriceHi = PriceArray[ElementIndex+1];
-				 if (ElementIndex == (Count - 2)) AIMBPriceHi = PriceArray[ElementIndex+1];
-				 if (ElementIndex == (Count - 1)) AIMBPriceHi = PriceArray[ElementIndex+1];
-			 }
-			 */
-			 // BIMBPrice = 0.0;
 		 }
 		 
 		 // Sell Imbalance
@@ -794,19 +721,6 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 				 sc.AddMessageToLog(scratchmsg, 1);
 			 }
 			 CountSellImb++;
-			 /*
-			 if (Count >=5)
-			 {
-				 if (ElementIndex == 2) BIMBPriceLo = PriceArray[ElementIndex];
-				 if (ElementIndex == 1) BIMBPriceLo = PriceArray[ElementIndex];
-				 if (ElementIndex == 0) BIMBPriceLo = PriceArray[ElementIndex];
-				 
-				 if (ElementIndex == (Count - 3)) BIMBPriceHi = PriceArray[ElementIndex];
-				 if (ElementIndex == (Count - 2)) BIMBPriceHi = PriceArray[ElementIndex];
-				 if (ElementIndex == (Count - 1)) BIMBPriceHi = PriceArray[ElementIndex];
-			 }
-			 */
-			 // AIMBPrice = 0.0;
 		 }
 		 // if (AIMBPriceHi == BIMBPriceHi) AIMBPriceHi = BIMBPriceHi = 0.0; // If imbalances at the same price, set to 0		 
 		 // if (AIMBPriceLo == BIMBPriceLo) AIMBPriceLo = BIMBPriceLo = 0.0; // If imbalances at the same price, set to 0		 
@@ -860,25 +774,19 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
     * Zero print and buy/sell imbalance detection code END *
 	********************************************************/
    
-
-   	/*
-	sprintf(scratchmsg, "BidV=%d, AskV=%d, MaxV=%d\n", MaxBidVolume, MaxAskVolume, MaxVolume);
-	sc.AddMessageToLog(scratchmsg, 1);
-   	sprintf(scratchmsg, "BidVPrice=%f, AskVPrice=%f, MaxVPrice=%f\n", MaxBidVolumePrice, MaxAskVolumePrice, MaxVolumePrice);
-	sc.AddMessageToLog(scratchmsg, 1);
-	*/
-
    MaxVAP[sc.Index] = MaxVolumePrice;
    MaxBidVAP[sc.Index] = MaxBidVolumePrice;
    MaxAskVAP[sc.Index] = MaxAskVolumePrice;
    MaxVAPPercent[sc.Index] = ((MaxVolumePrice - sc.Low[sc.Index]) / (sc.High[sc.Index] - sc.Low[sc.Index])) * 100.0;
    TotalBidVolume[sc.Index] = TBV;
    TotalAskVolume[sc.Index] = TAV;
+
    DV = (int)TAV - (int)TBV;
    DeltaVolume[sc.Index] = DV;
    //if (DV == 0) DeltaVolume.PrimaryColor = COLOR_YELLOW;
    //if (DV < 0) DeltaVolume.PrimaryColor = RGB(255,128,128); // light red
    //if (DV > 0) DeltaVolume.PrimaryColor = COLOR_GREEN;
+   
    TOT = TAV + TBV;
    TotalBidVolumePercent[sc.Index] = (TBV / TOT) * 100.0;
    TotalAskVolumePercent[sc.Index] = (TAV / TOT) * 100.0;
@@ -886,7 +794,6 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    TotalAskVolumePerTick[sc.Index] = TAV / Count;
    if (ZPAPrice > 0.0) ZPA[sc.Index] = ZPAPrice;
    if (ZPBPrice > 0.0) ZPB[sc.Index] = ZPBPrice;
-   // BuyImbalance[sc.Index] = SellImbalance[sc.Index] = 0.0;
    BuyImbalanceHi[sc.Index] = AIMBPriceHi;
    SellImbalanceHi[sc.Index] = BIMBPriceHi;
    BuyImbalanceLo[sc.Index] = AIMBPriceLo;
