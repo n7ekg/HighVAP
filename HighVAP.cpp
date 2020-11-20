@@ -105,8 +105,8 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       // During development set this flag to 1, so the DLL can be modified. When development is done, set it to 0 to improve performance.
       sc.FreeDLL = 0;
 	  sc.DrawStudyUnderneathMainPriceGraph = 1;
-	  //sc.MaintainHistoricalMarketDepthData = 1;
-	  //sc.MaintainVolumeAtPriceData = 1;
+	  sc.MaintainHistoricalMarketDepthData = 1;
+	  sc.MaintainVolumeAtPriceData = 1;
 
       sc.GraphName = "High Volume At Price v0.4e";
       sc.StudyDescription = "Display various statistics for each bar.";
