@@ -385,33 +385,33 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 
 	  UBHi.Name = "Unfinished Business Hi";
       UBHi.DrawStyle = DRAWSTYLE_DASH;
-      UBHi.LineWidth = 2;
-      UBHi.PrimaryColor = RGB(0,255,255); // cyan
+      UBHi.LineWidth = 1;
+      UBHi.PrimaryColor = RGB(255,128,64); // orange
 	  
 	  UBLo.Name = "Unfinished Business Low";
       UBLo.DrawStyle = DRAWSTYLE_DASH;
-      UBLo.LineWidth = 2;
-      UBLo.PrimaryColor = RGB(0,255,255); // cyan
+      UBLo.LineWidth = 1;
+      UBLo.PrimaryColor = RGB(255,128,64); // orange
 	  
 	  NumBuyImb.Name = "Number of Buy Imbalances";
       NumBuyImb.DrawStyle = DRAWSTYLE_IGNORE;
       NumBuyImb.LineWidth = 2;
-      NumBuyImb.PrimaryColor = RGB(0,255,255); // cyan
+      NumBuyImb.PrimaryColor = COLOR_GREEN;
 
 	  NumSellImb.Name = "Number of Sell Imbalances";
       NumSellImb.DrawStyle = DRAWSTYLE_IGNORE;
       NumSellImb.LineWidth = 2;
-      NumSellImb.PrimaryColor = RGB(0,255,255); // cyan
+      NumSellImb.PrimaryColor = RGB(255,128,128); // light red
 
 	  NumBuyZP.Name = "Number of Buy Small Prints";
       NumBuyZP.DrawStyle = DRAWSTYLE_IGNORE;
       NumBuyZP.LineWidth = 2;
-      NumBuyZP.PrimaryColor = RGB(0,255,255); // cyan
+      NumBuyZP.PrimaryColor = COLOR_GREEN;
 
 	  NumSellZP.Name = "Number of Sell Small Prints";
       NumSellZP.DrawStyle = DRAWSTYLE_IGNORE;
       NumSellZP.LineWidth = 2;
-      NumSellZP.PrimaryColor = RGB(0,255,255); // cyan
+      NumSellZP.PrimaryColor = RGB(255,128,128); // light red
 
       return;
    }
