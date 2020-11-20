@@ -37,7 +37,7 @@ int InLowPin(float PRICE)
 */
 
 char scratchmsg[255];
-SCDLLName("High Volume At Price v0.4d") 
+SCDLLName("High Volume At Price v0.4e") 
 
 SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 {
@@ -98,6 +98,13 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	SCSubgraphRef CurPrice = sc.Subgraph[45];
 	SCSubgraphRef VWAPPrice = sc.Subgraph[46];
 	
+	SCSubgraphRef UBHi = sc.Subgraph[47];
+	SCSubgraphRef UBLo = sc.Subgraph[48];
+	SCSubgraphRef NumBuyImb = sc.Subgraph[49];
+	SCSubgraphRef NumSellImb = sc.Subgraph[50];
+	SCSubgraphRef NumBuyZP = sc.Subgraph[51];
+	SCSubgraphRef NumSellZP = sc.Subgraph[52];
+	
 	if (sc.HideStudy == 1)
 		return;
 
@@ -109,7 +116,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	  //sc.MaintainHistoricalMarketDepthData = 1;
 	  //sc.MaintainVolumeAtPriceData = 1;
 
-      sc.GraphName = "High Volume At Price v0.4d";
+      sc.GraphName = "High Volume At Price v0.4e";
       sc.StudyDescription = "Display various statistics for each bar.";
       sc.AutoLoop = 1;
       sc.GraphRegion = 0;
@@ -376,6 +383,36 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       LOBValidFlag.LineWidth = 1;
       LOBValidFlag.PrimaryColor = COLOR_BLACK;
 
+	  UBHi.Name = "Unfinished Business Hi";
+      UBHi.DrawStyle = DRAWSTYLE_DASH;
+      UBHi.LineWidth = 2;
+      UBHi.PrimaryColor = RGB(0,255,255); // cyan
+	  
+	  UBLo.Name = "Unfinished Business Low";
+      UBLo.DrawStyle = DRAWSTYLE_DASH;
+      UBLo.LineWidth = 2;
+      UBLo.PrimaryColor = RGB(0,255,255); // cyan
+	  
+	  NumBuyImb.Name = "Number of Buy Imbalances";
+      NumBuyImb.DrawStyle = DRAWSTYLE_IGNORE;
+      NumBuyImb.LineWidth = 2;
+      NumBuyImb.PrimaryColor = RGB(0,255,255); // cyan
+
+	  NumSellImb.Name = "Number of Sell Imbalances";
+      NumSellImb.DrawStyle = DRAWSTYLE_IGNORE;
+      NumSellImb.LineWidth = 2;
+      NumSellImb.PrimaryColor = RGB(0,255,255); // cyan
+
+	  NumBuyZP.Name = "Number of Buy Small Prints";
+      NumBuyZP.DrawStyle = DRAWSTYLE_IGNORE;
+      NumBuyZP.LineWidth = 2;
+      NumBuyZP.PrimaryColor = RGB(0,255,255); // cyan
+
+	  NumSellZP.Name = "Number of Sell Small Prints";
+      NumSellZP.DrawStyle = DRAWSTYLE_IGNORE;
+      NumSellZP.LineWidth = 2;
+      NumSellZP.PrimaryColor = RGB(0,255,255); // cyan
+
       return;
    }
 
@@ -429,9 +466,12 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    int xLOBCurAskVolume = 0;
    float xCurPrice = 0.0;
    int CountBuyImb = 0, CountSellImb = 0;
+   int CountBuyZP = 0, CountSellZP = 0;
    
    s_VolumeAtPriceV2* p_VolumeAtPriceAtIndex = 0;
    s_MarketDepthEntry DepthEntry;
+   
+   DebugLog.SetInt(0);
    
   if (DebugLog.GetInt() == 1)
   {
@@ -663,6 +703,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    
    AIMBPriceHi = BIMBPriceHi = AIMBPriceLo = BIMBPriceLo = 0.0;
    CountBuyImb = CountSellImb = 0;
+   CountBuyZP = CountSellZP = 0;
    for (int ElementIndex = 0; ElementIndex < Count; ElementIndex++)
    {
 	  // s_VolumeAtPriceV2* p_VolumeAtPriceAtIndex = 0;
@@ -698,8 +739,16 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		 {
 			 //AIMBPrice = 0.0;
 			 //BIMBPrice = 0.0;
-			 if (p_VolumeAtPriceAtIndex->BidVolume < TRIGGER && p_VolumeAtPriceAtIndex->AskVolume > 0 && ZPBPrice == 0.0) ZPB[sc.Index] = p_VolumeAtPriceAtIndex->PriceInTicks * sc.TickSize;
-			 if (p_VolumeAtPriceAtIndex->BidVolume > 0 && p_VolumeAtPriceAtIndex->AskVolume < TRIGGER && ZPAPrice == 0.0) ZPA[sc.Index] = p_VolumeAtPriceAtIndex->PriceInTicks * sc.TickSize;
+			 if (p_VolumeAtPriceAtIndex->BidVolume < TRIGGER && p_VolumeAtPriceAtIndex->AskVolume > 0)
+			 {
+				 if (ZPBPrice == 0.0) ZPB[sc.Index] = p_VolumeAtPriceAtIndex->PriceInTicks * sc.TickSize;
+				 CountSellZP++;
+			 }
+			 if (p_VolumeAtPriceAtIndex->BidVolume > 0 && p_VolumeAtPriceAtIndex->AskVolume < TRIGGER)
+			 {
+				 if (ZPBPrice == 0.0) ZPA[sc.Index] = p_VolumeAtPriceAtIndex->PriceInTicks * sc.TickSize;
+				 CountBuyZP++;
+			 }
 		 }
 		 // if (BIMBPrice == 0.0 && p_VolumeAtPriceAtIndex->AskVolume > (p_VolumeAtPriceAtIndex->BidVolume * ImbRatio)) BIMB[sc.Index] = p_VolumeAtPriceAtIndex->PriceInTicks * sc.TickSize;
 		 
@@ -766,6 +815,10 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		 TAV = TAV + p_VolumeAtPriceAtIndex->AskVolume;
       }
    }
+   NumBuyZP[sc.Index] = CountBuyZP;
+   NumSellZP[sc.Index] = CountSellZP;
+   NumBuyImb[sc.Index] = CountBuyImb;
+   NumSellImb[sc.Index] = CountSellImb;
    
    /* New code to calculate buy/sell imbalances at the top or bottom of a bar */
    
@@ -791,9 +844,15 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		}
 			
    }
+   
+   /* Unfinished Business */
+   
+   if (AskArray[0] > 0 && BidArray[0] > 0) UBHi[sc.Index] = PriceArray[0];
+   if (AskArray[Count - 1] > 0 && BidArray[Count - 1] > 0) UBLo[sc.Index] = PriceArray[0];
+   
    if (DebugLog.GetInt() == 1 && (CountBuyImb > 0 || CountSellImb > 0))
    {
-	   sprintf(scratchmsg, "COUNTIMB: Buy=%d, Sell=%d\n", CountBuyImb, CountSellImb);
+	   sprintf(scratchmsg, "COUNTIMB: Buy Imb=%d, Sell Imb=%d, Buy ZP=%d, Sell ZP=%d\n", CountBuyImb, CountSellImb, CountBuyZP, CountSellZP);
 	   sc.AddMessageToLog(scratchmsg, 1);
    }
    
