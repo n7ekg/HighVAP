@@ -28,9 +28,36 @@ int InLowPin(float PRICE)
 }
 */
 
+SCDLLName("High Volume At Price v0.4f") 
 const char EXPIRATION_DATE[] = "2021-10-01";
 char scratchmsg[255];
-SCDLLName("High Volume At Price v0.4f") 
+
+// Friendly Names for Colors
+const unsigned int RGB_Red = RGB(255, 0, 0);
+const unsigned int RGB_Red210 = RGB(210, 0, 0);
+const unsigned int RGB_Green = RGB(0, 255, 0);
+const unsigned int RGB_Green210 = RGB(0, 210, 0);
+const unsigned int RGB_Blue = RGB(0, 0, 255);
+const unsigned int RGB_Magenta = RGB(255, 0, 255);
+const unsigned int RGB_Yellow = RGB(255, 255, 0);
+const unsigned int RGB_LightYellow = RGB(255, 255, 128);
+const unsigned int RGB_Cyan = RGB(0, 255, 255);
+const unsigned int RGB_Cyan210 = RGB(0, 210, 210);
+const unsigned int RGB_White = RGB(255, 255, 255);
+const unsigned int RGB_Black = RGB(0, 0, 0);
+const unsigned int RGB_Pink = RGB(255, 128, 192);
+const unsigned int RGB_Purple = RGB(128, 128, 192);
+const unsigned int RGB_LimeGreen = RGB(128, 255, 0);
+const unsigned int RGB_HotPink = RGB(255, 0, 128);
+
+bool IsExpired(SCStudyInterfaceRef sc) 
+{
+    SCString DateString (EXPIRATION_DATE);
+    SCDateTime futureDate;
+    futureDate = sc.DateStringToSCDateTime(DateString);
+
+    return GetNow(sc) >= futureDate;
+}
 
 SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 {
@@ -435,6 +462,9 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    }
 
    if ((int)sc.VolumeAtPriceForBars->GetNumberOfBars() < sc.ArraySize)
+      return;
+
+   if (IsExpired(sc))
       return;
 
    unsigned int xMaxBidVolume = 0, xMaxAskVolume = 0, MaxVolume = 0;
