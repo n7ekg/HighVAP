@@ -142,6 +142,13 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	if (sc.HideStudy == 1)
 		return;
 
+   if (IsExpired(sc))
+    {
+        sprintf(scratchmsg, "DLL expired on %s\n", EXPIRATION_DATE);
+        sc.AddMessageToLog(scratchmsg, 1);
+        return;
+    }
+
    if (sc.SetDefaults)
    {
       
@@ -267,12 +274,12 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       BuyImbalanceRatioLo.LineWidth = 2;
       BuyImbalanceRatioLo.PrimaryColor = RGB(255,255,255); // white;
 
-      SellImbalanceRatioHi.Name = "Buy Imbalance Ratio Top";
+      SellImbalanceRatioHi.Name = "Sell Imbalance Ratio Top";
       SellImbalanceRatioHi.DrawStyle = DRAWSTYLE_IGNORE;
       SellImbalanceRatioHi.LineWidth = 2;
       SellImbalanceRatioHi.PrimaryColor = RGB(255,255,255); // white;
 
-      SellImbalanceRatioLo.Name = "Buy Imbalance Ratio Bottom";
+      SellImbalanceRatioLo.Name = "Sell Imbalance Ratio Bottom";
       SellImbalanceRatioLo.DrawStyle = DRAWSTYLE_IGNORE;
       SellImbalanceRatioLo.LineWidth = 2;
       SellImbalanceRatioLo.PrimaryColor = RGB(255,255,255); // white;
@@ -472,9 +479,6 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    }
 
    if ((int)sc.VolumeAtPriceForBars->GetNumberOfBars() < sc.ArraySize)
-      return;
-
-   if (IsExpired(sc))
       return;
 
    unsigned int xMaxBidVolume = 0, xMaxAskVolume = 0, MaxVolume = 0;
@@ -813,12 +817,12 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 			if (AskArray[ElementIndex] >= (BidArray[ElementIndex-1] * ImbRatio))
 			{
 				AIMBPriceHi = PriceArray[ElementIndex];
-				AIMBRatioHi = AskArray[ElementIndex] / BidArray[ElementIndex-1];
+				if (AskArray[ElementIndex] > 0 && BidArray[ElementIndex-1] > 0) AIMBRatioHi = AskArray[ElementIndex] / BidArray[ElementIndex-1];
 			}
 			if ((BidArray[ElementIndex-1]) >= (AskArray[ElementIndex] * ImbRatio))
 			{
 				BIMBPriceHi = PriceArray[ElementIndex-1];
-				BIMBRatioHi = BidArray[ElementIndex-1] / AskArray[ElementIndex];
+				if (BidArray[ElementIndex-1] > 0 && AskArray[ElementIndex] > 0) BIMBRatioHi = BidArray[ElementIndex-1] / AskArray[ElementIndex];
 			}
 		}
 		
@@ -828,12 +832,12 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 			if (AskArray[ElementIndex+1] >= (BidArray[ElementIndex] * ImbRatio))
 			{
 				AIMBPriceLo = PriceArray[ElementIndex+1];
-				AIMBRatioLo = AskArray[ElementIndex+1] / BidArray[ElementIndex];
+				if (AskArray[ElementIndex+1] > 0 && BidArray[ElementIndex] > 0) AIMBRatioLo = AskArray[ElementIndex+1] / BidArray[ElementIndex];
 			}
 			if ((BidArray[ElementIndex]) >= (AskArray[ElementIndex+1] * ImbRatio))
 			{
 				BIMBPriceLo = PriceArray[ElementIndex];
-				BIMBRatioLo = BidArray[ElementIndex] / AskArray[ElementIndex+1];
+				if (BidArray[ElementIndex] > 0 && AskArray[ElementIndex+1] > 0) BIMBRatioLo = BidArray[ElementIndex] / AskArray[ElementIndex+1];
 			}
 		}
 			
