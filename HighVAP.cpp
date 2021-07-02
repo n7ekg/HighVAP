@@ -28,8 +28,9 @@ int InLowPin(float PRICE)
 }
 */
 
+const char EXPIRATION_DATE[] = "2021-10-01";
 char scratchmsg[255];
-SCDLLName("High Volume At Price v0.4e") 
+SCDLLName("High Volume At Price v0.4f") 
 
 SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 {
@@ -96,19 +97,24 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	SCSubgraphRef NumSellImb = sc.Subgraph[50];
 	SCSubgraphRef NumBuyZP = sc.Subgraph[51];
 	SCSubgraphRef NumSellZP = sc.Subgraph[52];
+	SCSubgraphRef BuyImbalanceRatioHi = sc.Subgraph[53];
+	SCSubgraphRef SellImbalanceRatioHi = sc.Subgraph[54];
+	SCSubgraphRef BuyImbalanceRatioLo = sc.Subgraph[55];
+	SCSubgraphRef SellImbalanceRatioLo = sc.Subgraph[56];
 	
 	if (sc.HideStudy == 1)
 		return;
 
    if (sc.SetDefaults)
    {
+      
       // During development set this flag to 1, so the DLL can be modified. When development is done, set it to 0 to improve performance.
       sc.FreeDLL = 0;
-	  sc.DrawStudyUnderneathMainPriceGraph = 1;
-	  sc.MaintainHistoricalMarketDepthData = 1;
-	  sc.MaintainVolumeAtPriceData = 1;
+      sc.DrawStudyUnderneathMainPriceGraph = 1;
+      sc.MaintainHistoricalMarketDepthData = 1;
+      sc.MaintainVolumeAtPriceData = 1;
 
-      sc.GraphName = "High Volume At Price v0.4e";
+      sc.GraphName = "High Volume At Price v0.4f";
       sc.StudyDescription = "Display various statistics for each bar.";
       sc.AutoLoop = 1;
       sc.GraphRegion = 0;
@@ -194,26 +200,46 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       BuyImbalanceHi.DrawStyle = DRAWSTYLE_DASH;
       BuyImbalanceHi.LineWidth = 1;
       BuyImbalanceHi.PrimaryColor = RGB(0,255,255); // cyan
-	  BuyImbalanceHi.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
+      BuyImbalanceHi.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
 
       SellImbalanceHi.Name = "Sell Imbalance Top";
       SellImbalanceHi.DrawStyle = DRAWSTYLE_DASH;
       SellImbalanceHi.LineWidth = 1;
       SellImbalanceHi.PrimaryColor = RGB(255,128,128); // light red;
-	  SellImbalanceHi.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
+      SellImbalanceHi.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
 	  
       BuyImbalanceLo.Name = "Buy Imbalance Bottom";
       BuyImbalanceLo.DrawStyle = DRAWSTYLE_DASH;
       BuyImbalanceLo.LineWidth = 1;
       BuyImbalanceLo.PrimaryColor = RGB(0,255,255); // cyan
-	  BuyImbalanceLo.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
+      BuyImbalanceLo.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
 
       SellImbalanceLo.Name = "Sell Imbalance Bottom";
       SellImbalanceLo.DrawStyle = DRAWSTYLE_DASH;
       SellImbalanceLo.LineWidth = 1;
       SellImbalanceLo.PrimaryColor = RGB(255,128,128); // light red;
-	  SellImbalanceLo.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
+      SellImbalanceLo.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
 	  
+      BuyImbalanceRatioHi.Name = "Buy Imbalance Ratio Top";
+      BuyImbalanceRatioHi.DrawStyle = DRAWSTYLE_IGNORE;
+      BuyImbalanceRatioHi.LineWidth = 2;
+      BuyImbalanceRatioHi.PrimaryColor = RGB(255,255,255); // white;
+
+      BuyImbalanceRatioLo.Name = "Buy Imbalance Ratio Bottom";
+      BuyImbalanceRatioLo.DrawStyle = DRAWSTYLE_IGNORE;
+      BuyImbalanceRatioLo.LineWidth = 2;
+      BuyImbalanceRatioLo.PrimaryColor = RGB(255,255,255); // white;
+
+      SellImbalanceRatioHi.Name = "Buy Imbalance Ratio Top";
+      SellImbalanceRatioHi.DrawStyle = DRAWSTYLE_IGNORE;
+      SellImbalanceRatioHi.LineWidth = 2;
+      SellImbalanceRatioHi.PrimaryColor = RGB(255,255,255); // white;
+
+      SellImbalanceRatioLo.Name = "Buy Imbalance Ratio Bottom";
+      SellImbalanceRatioLo.DrawStyle = DRAWSTYLE_IGNORE;
+      SellImbalanceRatioLo.LineWidth = 2;
+      SellImbalanceRatioLo.PrimaryColor = RGB(255,255,255); // white;
+
 	  ImbalanceRatio.Name = "Imbalance Ratio";
 	  ImbalanceRatio.SetInt(3);
 	  ImbalanceRatio.SetIntLimits(1,8);
@@ -234,12 +260,12 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	  MarketDepthLimit.SetInt(20);
 	  MarketDepthLimit.SetIntLimits(1,999);
 	  
-	  VolumePerTick.Name = "Volume Per Tick";
+      VolumePerTick.Name = "Volume Per Tick";
       VolumePerTick.DrawStyle = DRAWSTYLE_IGNORE;
       VolumePerTick.LineWidth = 2;
       VolumePerTick.PrimaryColor = RGB(0,255,255); // cyan
 
-	  DeltaVolume.Name = "Delta Volume";
+      DeltaVolume.Name = "Delta Volume";
       DeltaVolume.DrawStyle = DRAWSTYLE_IGNORE;
       DeltaVolume.LineWidth = 2;
       DeltaVolume.PrimaryColor = RGB(0,255,255); // cyan
@@ -248,9 +274,9 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       VWAPPrice.DrawStyle = DRAWSTYLE_DASH;
       VWAPPrice.LineWidth = 1;
       VWAPPrice.PrimaryColor = RGB(255,0,255); // purple/magenta
-	  VWAPPrice.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
+      VWAPPrice.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
 
-	  Candle_Size.Name = "Candle Size";
+      Candle_Size.Name = "Candle Size";
       Candle_Size.DrawStyle = DRAWSTYLE_IGNORE;
       Candle_Size.LineWidth = 2;
       Candle_Size.PrimaryColor = RGB(0,255,255); // cyan
@@ -736,31 +762,44 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    
    /* New code to calculate buy/sell imbalances at the top or bottom of a bar */
    
-	AIMBPriceHi = BIMBPriceHi = AIMBPriceLo = BIMBPriceLo = 0.0;
+	AIMBPriceHi = BIMBPriceHi = AIMBPriceLo = BIMBPriceLo = AIMBRatioHi = BIMBRatioHigh = AIMBRatioLo = BIMBRatioLo = 0.0;
    if (Count >=5)
    {
 		/* Check buy/sell imbalance at the top of the bar */
 		for (int ElementIndex = Count - 3; ElementIndex < Count; ElementIndex++)
 		{
 			if (AskArray[ElementIndex] >= (BidArray[ElementIndex-1] * ImbRatio))
+			{
 				AIMBPriceHi = PriceArray[ElementIndex];
+				AIMBRatioHi = AskArray[ElementIndex] / BidArray[ElementIndex-1];
+			}
 			if ((BidArray[ElementIndex-1]) >= (AskArray[ElementIndex] * ImbRatio))
+			{
 				BIMBPriceHi = PriceArray[ElementIndex-1];
+				BIMBRatioHigh = BidArray[ElementIndex-1] / AskArray[ElementIndex];
+			}
 		}
 		
 		/* Now do it at the bottom of the bar */
 		for (int ElementIndex = 2; ElementIndex >= 0; ElementIndex--)
 		{
 			if (AskArray[ElementIndex+1] >= (BidArray[ElementIndex] * ImbRatio))
+			{
 				AIMBPriceLo = PriceArray[ElementIndex+1];
+				AIMBRatioLo = AskArray[ElementIndex+1] / BidArray[ElementIndex];
+			}
 			if ((BidArray[ElementIndex]) >= (AskArray[ElementIndex+1] * ImbRatio))
+			{
 				BIMBPriceLo = PriceArray[ElementIndex];
+				BIMBRatioLo = BidArray[ElementIndex] / AskArray[ElementIndex+1];
+			}
 		}
 			
    }
    
    /* Unfinished Business */
    
+   UBHi[sc.Index] = UBLo[sc.Index] = 0;
    if (AskArray[0] > 0 && BidArray[0] > 0) UBHi[sc.Index] = PriceArray[0];
    if (AskArray[Count - 1] > 0 && BidArray[Count - 1] > 0) UBLo[sc.Index] = PriceArray[0];
    
@@ -794,10 +833,16 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    TotalAskVolumePerTick[sc.Index] = TAV / Count;
    if (ZPAPrice > 0.0) ZPA[sc.Index] = ZPAPrice;
    if (ZPBPrice > 0.0) ZPB[sc.Index] = ZPBPrice;
+
    BuyImbalanceHi[sc.Index] = AIMBPriceHi;
    SellImbalanceHi[sc.Index] = BIMBPriceHi;
    BuyImbalanceLo[sc.Index] = AIMBPriceLo;
    SellImbalanceLo[sc.Index] = BIMBPriceLo;
+   BuyImbalanceRatioHi[sc.Index] = AIMBRatioHi;
+   SellImbalanceRatioHi[sc.Index] = BIMBRatioHi;
+   BuyImbalanceRatioHLo[sc.Index] = AIMBRatioLo;
+   SellImbalanceRatioLo[sc.Index] = BIMBRatioLo;
+
    VolumePerTick[sc.Index] = TOT / Count;
    Candle_Size[sc.Index] = (sc.High[sc.Index] - sc.Low[sc.Index]) / sc.TickSize;
    AverageVolume[sc.Index] = (TBV + TAV) / Candle_Size[sc.Index];
