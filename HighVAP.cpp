@@ -1,7 +1,7 @@
 //   Copyright 2019, by Ed Carp. All rights reserved. Distribution without permission is prohibited.
 
 #include "sierrachart.h"
-#include "scstudyfunctions.h"
+// #include "scstudyfunctions.h"
 #include <math.h>
 #define TRIGGER 10
 
@@ -49,6 +49,16 @@ const unsigned int RGB_Pink = RGB(255, 128, 192);
 const unsigned int RGB_Purple = RGB(128, 128, 192);
 const unsigned int RGB_LimeGreen = RGB(128, 255, 0);
 const unsigned int RGB_HotPink = RGB(255, 0, 128);
+
+SCDateTime GetNow(SCStudyInterfaceRef sc) 
+{
+    //https://www.sierrachart.com/index.php?page=doc/ACSIL_Members_Functions.html#scGetCurrentDateTime
+    if (sc.IsReplayRunning()) {
+        return sc.CurrentDateTimeForReplay; 
+    } else {
+        return sc.CurrentSystemDateTime;
+    }
+}
 
 bool IsExpired(SCStudyInterfaceRef sc) 
 {
@@ -477,6 +487,8 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    float ZPBPrice = 0.0, ZPAPrice = 0.0;
    float BIMBPriceHi = 0.0, AIMBPriceHi = 0.0;
    float BIMBPriceLo = 0.0, AIMBPriceLo = 0.0;
+   float BIMBRatioHi = 0.0, AIMBRatioHi = 0.0;
+   float BIMBRatioLo = 0.0, AIMBRatioLo = 0.0;
    float RVBTPrice = 0.0, RVATPrice = 0.0; // Reducing Volume Bid/Ask Top Price
    float RVBBPrice = 0.0, RVABPrice = 0.0; // Reducing Volume Bid/Ask Bottom Price
    unsigned int i;
@@ -792,7 +804,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    
    /* New code to calculate buy/sell imbalances at the top or bottom of a bar */
    
-	AIMBPriceHi = BIMBPriceHi = AIMBPriceLo = BIMBPriceLo = AIMBRatioHi = BIMBRatioHigh = AIMBRatioLo = BIMBRatioLo = 0.0;
+	AIMBPriceHi = BIMBPriceHi = AIMBPriceLo = BIMBPriceLo = AIMBRatioHi = BIMBRatioHi = AIMBRatioLo = BIMBRatioLo = 0.0;
    if (Count >=5)
    {
 		/* Check buy/sell imbalance at the top of the bar */
@@ -806,7 +818,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 			if ((BidArray[ElementIndex-1]) >= (AskArray[ElementIndex] * ImbRatio))
 			{
 				BIMBPriceHi = PriceArray[ElementIndex-1];
-				BIMBRatioHigh = BidArray[ElementIndex-1] / AskArray[ElementIndex];
+				BIMBRatioHi = BidArray[ElementIndex-1] / AskArray[ElementIndex];
 			}
 		}
 		
@@ -870,7 +882,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    SellImbalanceLo[sc.Index] = BIMBPriceLo;
    BuyImbalanceRatioHi[sc.Index] = AIMBRatioHi;
    SellImbalanceRatioHi[sc.Index] = BIMBRatioHi;
-   BuyImbalanceRatioHLo[sc.Index] = AIMBRatioLo;
+   BuyImbalanceRatioLo[sc.Index] = AIMBRatioLo;
    SellImbalanceRatioLo[sc.Index] = BIMBRatioLo;
 
    VolumePerTick[sc.Index] = TOT / Count;
