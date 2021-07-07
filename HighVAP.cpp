@@ -301,7 +301,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	  DebugLog.SetIntLimits(0,1);
 	  
 	  MarketDepthLimit.Name = "Limit To Levels Of Market Depth Analysis";
-	  MarketDepthLimit.SetInt(20);
+	  MarketDepthLimit.SetInt(21);
 	  MarketDepthLimit.SetIntLimits(1,999);
 	  
       VolumePerTick.Name = "Volume Per Tick";
