@@ -28,7 +28,7 @@ int InLowPin(float PRICE)
 }
 */
 
-SCDLLName("High Volume At Price v0.4f") 
+SCDLLName("High Volume At Price v0.4g") 
 const char EXPIRATION_DATE[] = "2022-01-01";
 char scratchmsg[255];
 
