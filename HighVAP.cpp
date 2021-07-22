@@ -291,7 +291,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 
 	  ImbalanceRatio.Name = "Imbalance Ratio";
 	  ImbalanceRatio.SetInt(3);
-	  ImbalanceRatio.SetIntLimits(1,8);
+	  ImbalanceRatio.SetIntLimits(1,1000);
 	  
 	  MinimumBarSize.Name = "Minimum Size For Bar";
 	  MinimumBarSize.SetInt(5);
@@ -303,7 +303,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	  
 	  DebugLog.Name = "Log Debug Data (1=Yes, 0=No)";
 	  DebugLog.SetInt(0);
-	  DebugLog.SetIntLimits(0,1);
+	  DebugLog.SetIntLimits(0,0);
 	  
 	  MarketDepthLimit.Name = "Limit To Levels Of Market Depth Analysis";
 	  MarketDepthLimit.SetInt(21);
@@ -828,12 +828,12 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		/* Check buy/sell imbalance at the top of the bar */
 		for (int ElementIndex = Count - 3; ElementIndex < Count; ElementIndex++)
 		{
-			if (AskArray[ElementIndex] >= (BidArray[ElementIndex-1] * ImbRatio))
+			if (AskArray[ElementIndex] >= ((BidArray[ElementIndex-1] + 1) * ImbRatio))
 			{
 				AIMBPriceHi = PriceArray[ElementIndex];
 				if (AskArray[ElementIndex] > 0 && BidArray[ElementIndex-1] > 0) AIMBRatioHi = AskArray[ElementIndex] / BidArray[ElementIndex-1];
 			}
-			if ((BidArray[ElementIndex-1]) >= (AskArray[ElementIndex] * ImbRatio))
+			if ((BidArray[ElementIndex-1]) >= ((AskArray[ElementIndex] + 1) * ImbRatio))
 			{
 				BIMBPriceHi = PriceArray[ElementIndex-1];
 				if (BidArray[ElementIndex-1] > 0 && AskArray[ElementIndex] > 0) BIMBRatioHi = BidArray[ElementIndex-1] / AskArray[ElementIndex];
