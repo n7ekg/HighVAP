@@ -351,56 +351,60 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       ReducingVolumeAskBot.LineWidth = 2;
       ReducingVolumeAskBot.PrimaryColor = RGB(255,0,0); // dark red
 
-      LOBMinBidVAP.Name = "LOBMinBidVAP";
-      LOBMinBidVAP.DrawStyle = DRAWSTYLE_IGNORE;
+      LOBMinBidVAP.Name = "LOBMinAskVAP";
+      LOBMinBidVAP.DrawStyle = DRAWSTYLE_LINE;
       LOBMinBidVAP.LineWidth = 2;
       LOBMinBidVAP.PrimaryColor = RGB(128,255,255); // light cyan
+	  LOBMinBidVAP.ShortName = "LOBMinAsk";
+	  LOBMinBidVAP.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
 
-      LOBMinAskVAP.Name = "LOBMinAskVAP";
-      LOBMinAskVAP.DrawStyle = DRAWSTYLE_IGNORE;
+      LOBMinAskVAP.Name = "LOBMinBidVAP";
+      LOBMinAskVAP.DrawStyle = DRAWSTYLE_LINE;
       LOBMinAskVAP.LineWidth = 2;
       LOBMinAskVAP.PrimaryColor = RGB(255,128,128); // light red
+      LOBMinAskVAP.ShortName = "LOBMinBid";
+	  LOBMinAskVAP.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
 
-      LOBMaxBidVAP.Name = "LOBMaxBidVAP";
+      LOBMaxBidVAP.Name = "LOBMaxAskVAP";
       LOBMaxBidVAP.DrawStyle = DRAWSTYLE_LINE;
       LOBMaxBidVAP.LineWidth = 4;
       LOBMaxBidVAP.PrimaryColor = RGB(128,255,255); // light cyan
       LOBMaxBidVAP.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
-      LOBMaxBidVAP.ShortName = "LOBMaxBid";
+      LOBMaxBidVAP.ShortName = "LOBMaxAsk";
 
-      LOBMaxAskVAP.Name = "LOBMaxAskVAP";
+      LOBMaxAskVAP.Name = "LOBMaxBidVAP";
       LOBMaxAskVAP.DrawStyle = DRAWSTYLE_LINE;
       LOBMaxAskVAP.LineWidth = 4;
       LOBMaxAskVAP.PrimaryColor = RGB(255,128,128); // light red
       LOBMaxAskVAP.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
-      LOBMaxAskVAP.ShortName = "LOBMaxAsk";
+      LOBMaxAskVAP.ShortName = "LOBMaxBid";
 
-      LOBMinBidVolume.Name = "LOBMinBidVolume";
+      LOBMinBidVolume.Name = "LOBMinAskVolume";
       LOBMinBidVolume.DrawStyle = DRAWSTYLE_IGNORE;
       LOBMinBidVolume.LineWidth = 2;
       LOBMinBidVolume.PrimaryColor = RGB(255,128,128); // light red
 
-      LOBMinAskVolume.Name = "LOBMinAskVolume";
+      LOBMinAskVolume.Name = "LOBMinBidVolume";
       LOBMinAskVolume.DrawStyle = DRAWSTYLE_IGNORE;
       LOBMinAskVolume.LineWidth = 2;
       LOBMinAskVolume.PrimaryColor = COLOR_GREEN;
 
-      LOBMaxBidVolume.Name = "LOBMaxBidVolume";
+      LOBMaxBidVolume.Name = "LOBMaxAskVolume";
       LOBMaxBidVolume.DrawStyle = DRAWSTYLE_IGNORE;
       LOBMaxBidVolume.LineWidth = 5;
       LOBMaxBidVolume.PrimaryColor = RGB(128,255,255); // light cyan
 
-      LOBMaxAskVolume.Name = "LOBMaxAskVolume";
+      LOBMaxAskVolume.Name = "LOBMaxBidVolume";
       LOBMaxAskVolume.DrawStyle = DRAWSTYLE_IGNORE;
       LOBMaxAskVolume.LineWidth = 5;
       LOBMaxAskVolume.PrimaryColor = RGB(255,128,128); // light red
 
-      LOBAvgBidVolume.Name = "LOBAvgBidVolume";
+      LOBAvgBidVolume.Name = "LOBAvgAskVolume";
       LOBAvgBidVolume.DrawStyle = DRAWSTYLE_IGNORE;
       LOBAvgBidVolume.LineWidth = 5;
       LOBAvgBidVolume.PrimaryColor = RGB(128,255,255); // light cyan
 
-      LOBAvgAskVolume.Name = "LOBAvgAskVolume";
+      LOBAvgAskVolume.Name = "LOBAvgBidVolume";
       LOBAvgAskVolume.DrawStyle = DRAWSTYLE_IGNORE;
       LOBAvgAskVolume.LineWidth = 5;
       LOBAvgAskVolume.PrimaryColor = RGB(255,128,128); // light red
@@ -410,22 +414,22 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       LOBAvgVolume.LineWidth = 5;
       LOBAvgVolume.PrimaryColor = RGB(255,128,128); // light red
 
-      LOBTotalBidVolume.Name = "LOBTotalBidVolume";
+      LOBTotalBidVolume.Name = "LOBTotalAskVolume";
       LOBTotalBidVolume.DrawStyle = DRAWSTYLE_IGNORE;
       LOBTotalBidVolume.LineWidth = 2;
       LOBTotalBidVolume.PrimaryColor = COLOR_YELLOW;
 
-      LOBTotalAskVolume.Name = "LOBTotalAskVolume";
+      LOBTotalAskVolume.Name = "LOBTotalBidVolume";
       LOBTotalAskVolume.DrawStyle = DRAWSTYLE_IGNORE;
       LOBTotalAskVolume.LineWidth = 2;
       LOBTotalAskVolume.PrimaryColor = COLOR_YELLOW;
 
-      LOBTotalBidVolumePercent.Name = "LOBTotalBidVolumePercent";
+      LOBTotalBidVolumePercent.Name = "LOBTotalAskVolumePercent";
       LOBTotalBidVolumePercent.DrawStyle = DRAWSTYLE_IGNORE;
       LOBTotalBidVolumePercent.LineWidth = 2;
       LOBTotalBidVolumePercent.PrimaryColor = COLOR_YELLOW;
 
-      LOBTotalAskVolumePercent.Name = "LOBTotalAskVolumePercent";
+      LOBTotalAskVolumePercent.Name = "LOBTotalBidVolumePercent";
       LOBTotalAskVolumePercent.DrawStyle = DRAWSTYLE_IGNORE;
       LOBTotalAskVolumePercent.LineWidth = 2;
       LOBTotalAskVolumePercent.PrimaryColor = COLOR_YELLOW;
@@ -435,12 +439,12 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       LOBDeltaVolume.LineWidth = 2;
       LOBDeltaVolume.PrimaryColor = RGB(0,255,255); // cyan
 
-      LOBCurBidVolume.Name = "LOBCurBidVolume";
+      LOBCurBidVolume.Name = "LOBCurAskVolume";
       LOBCurBidVolume.DrawStyle = DRAWSTYLE_IGNORE;
       LOBCurBidVolume.LineWidth = 5;
       LOBCurBidVolume.PrimaryColor = RGB(128,255,255); // light cyan
 
-      LOBCurAskVolume.Name = "LOBCurAskVolume";
+      LOBCurAskVolume.Name = "LOBCurBidVolume";
       LOBCurAskVolume.DrawStyle = DRAWSTYLE_IGNORE;
       LOBCurAskVolume.LineWidth = 5;
       LOBCurAskVolume.PrimaryColor = RGB(255,128,128); // light red
