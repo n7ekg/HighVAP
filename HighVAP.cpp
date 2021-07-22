@@ -178,7 +178,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       MaxVAP.DrawStyle = DRAWSTYLE_DASH;
       MaxVAP.LineWidth = 1;
       MaxVAP.PrimaryColor = COLOR_YELLOW;
-      MaxVAP.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
+      MaxVAP.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       MaxVAP.ShortName = "VPOC";
 
       MaxVAPPercent.Name = "MaxVAPPercent";
@@ -245,28 +245,28 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       BuyImbalanceHi.DrawStyle = DRAWSTYLE_DASH;
       BuyImbalanceHi.LineWidth = 1;
       BuyImbalanceHi.PrimaryColor = RGB(0,255,255); // cyan
-      BuyImbalanceHi.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
+      BuyImbalanceHi.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       BuyImbalanceHi.ShortName = "BIMBT";
 
       SellImbalanceHi.Name = "Sell Imbalance Top";
       SellImbalanceHi.DrawStyle = DRAWSTYLE_DASH;
       SellImbalanceHi.LineWidth = 1;
       SellImbalanceHi.PrimaryColor = RGB(255,128,128); // light red;
-      SellImbalanceHi.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
+      SellImbalanceHi.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       SellImbalanceHi.ShortName = "SIMBT";
 	  
       BuyImbalanceLo.Name = "Buy Imbalance Bottom";
       BuyImbalanceLo.DrawStyle = DRAWSTYLE_DASH;
       BuyImbalanceLo.LineWidth = 1;
       BuyImbalanceLo.PrimaryColor = RGB(0,255,255); // cyan
-      BuyImbalanceLo.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
+      BuyImbalanceLo.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       BuyImbalanceLo.ShortName = "BIMBB";
 
       SellImbalanceLo.Name = "Sell Imbalance Bottom";
       SellImbalanceLo.DrawStyle = DRAWSTYLE_DASH;
       SellImbalanceLo.LineWidth = 1;
       SellImbalanceLo.PrimaryColor = RGB(255,128,128); // light red;
-      SellImbalanceLo.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
+      SellImbalanceLo.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       SellImbalanceLo.ShortName = "SIMBB";
 	  
       BuyImbalanceRatioHi.Name = "Buy Imbalance Ratio Top";
@@ -323,7 +323,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       VWAPPrice.DrawStyle = DRAWSTYLE_DASH;
       VWAPPrice.LineWidth = 1;
       VWAPPrice.PrimaryColor = RGB(255,0,255); // purple/magenta
-      VWAPPrice.LineLabel = LL_DISPLAY_VALUE | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_RIGHT;
+      VWAPPrice.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       VWAPPrice.ShortName = "VWAP";
 
       Candle_Size.Name = "Candle Size";
@@ -362,15 +362,17 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       LOBMinAskVAP.PrimaryColor = RGB(255,128,128); // light red
 
       LOBMaxBidVAP.Name = "LOBMaxBidVAP";
-      LOBMaxBidVAP.DrawStyle = DRAWSTYLE_IGNORE;
-      LOBMaxBidVAP.LineWidth = 5;
+      LOBMaxBidVAP.DrawStyle = DRAWSTYLE_LINE;
+      LOBMaxBidVAP.LineWidth = 4;
       LOBMaxBidVAP.PrimaryColor = RGB(128,255,255); // light cyan
+      LOBMaxBidVAP.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       LOBMaxBidVAP.ShortName = "LOBMaxBid";
 
       LOBMaxAskVAP.Name = "LOBMaxAskVAP";
-      LOBMaxAskVAP.DrawStyle = DRAWSTYLE_IGNORE;
-      LOBMaxAskVAP.LineWidth = 5;
+      LOBMaxAskVAP.DrawStyle = DRAWSTYLE_LINE;
+      LOBMaxAskVAP.LineWidth = 4;
       LOBMaxAskVAP.PrimaryColor = RGB(255,128,128); // light red
+      LOBMaxAskVAP.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       LOBMaxAskVAP.ShortName = "LOBMaxAsk";
 
       LOBMinBidVolume.Name = "LOBMinBidVolume";
@@ -457,12 +459,14 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       UBHi.DrawStyle = DRAWSTYLE_DASH;
       UBHi.LineWidth = 1;
       UBHi.PrimaryColor = RGB(255,128,64); // orange
+	  UBHi.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       UBHi.ShortName = "UFBT";
 	  
       UBLo.Name = "Unfinished Business Low";
       UBLo.DrawStyle = DRAWSTYLE_DASH;
       UBLo.LineWidth = 1;
       UBLo.PrimaryColor = RGB(255,128,64); // orange
+	  UBLo.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       UBLo.ShortName = "UFBB";
 	  
 	  NumBuyImb.Name = "Number of Buy Imbalances";
