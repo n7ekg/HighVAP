@@ -158,7 +158,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       sc.MaintainHistoricalMarketDepthData = 1;
       sc.MaintainVolumeAtPriceData = 1;
 
-      sc.GraphName = "High Volume At Price v0.4g";
+      sc.GraphName = "High Volume At Price";
       sc.StudyDescription = "Display various statistics for each bar.";
       sc.AutoLoop = 1;
       sc.GraphRegion = 0;
@@ -931,7 +931,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    
    LOBTotalBidVolumePercent[sc.Index] = ((float)xLOBTotalBidVolume / (float)(xLOBTotalBidVolume + xLOBTotalAskVolume)) * 100.0;
    LOBTotalAskVolumePercent[sc.Index] = ((float)xLOBTotalAskVolume / (float)(xLOBTotalBidVolume + xLOBTotalAskVolume)) * 100.0;
-   LOBDeltaVolume[sc.Index] = xLOBTotalAskVolume - xLOBTotalBidVolume;
+   LOBDeltaVolume[sc.Index] = xLOBTotalBidVolume - xLOBTotalAskVolume; // Mislabeled
    
    MaxBidVolume[sc.Index] = xMaxBidVolume;
    MaxAskVolume[sc.Index] = xMaxAskVolume;
