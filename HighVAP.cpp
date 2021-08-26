@@ -294,7 +294,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	  ImbalanceRatio.SetIntLimits(1,1000);
 	  
 	  MinimumBarSize.Name = "Minimum Size For Bar";
-	  MinimumBarSize.SetInt(5);
+	  MinimumBarSize.SetInt(3);
 	  MinimumBarSize.SetIntLimits(3,1000);
 	  
 	  CompareLevels.Name = "Minimum Compare Levels At Bar Extreme";
@@ -827,7 +827,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    /* New code to calculate buy/sell imbalances at the top or bottom of a bar */
    
 	AIMBPriceHi = BIMBPriceHi = AIMBPriceLo = BIMBPriceLo = AIMBRatioHi = BIMBRatioHi = AIMBRatioLo = BIMBRatioLo = 0.0;
-   if (Count >=5)
+   if (Count >= MinBarSize)
    {
 		/* Check buy/sell imbalance at the top of the bar */
 		for (int ElementIndex = Count - 3; ElementIndex < Count; ElementIndex++)
