@@ -71,74 +71,85 @@ bool IsExpired(SCStudyInterfaceRef sc)
 
 SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 {
+	int sgctr = 0;
+
 	SCInputRef ImbalanceRatio = sc.Input[0];
 	SCInputRef MinimumBarSize = sc.Input[1];
 	SCInputRef CompareLevels = sc.Input[2];
 	SCInputRef DebugLog = sc.Input[3];
 	SCInputRef MarketDepthLimit = sc.Input[4];
+	SCInputRef ExhaustRatio = sc.Input[5];
 
-	SCSubgraphRef MaxBidVAP = sc.Subgraph[0];
-	SCSubgraphRef MaxAskVAP = sc.Subgraph[1];
-	SCSubgraphRef MaxVAP = sc.Subgraph[2];
-	SCSubgraphRef MaxVAPPercent = sc.Subgraph[3];
-	SCSubgraphRef TotalBidVolume = sc.Subgraph[4];
-	SCSubgraphRef TotalAskVolume = sc.Subgraph[5];
-	SCSubgraphRef TotalBidVolumePercent = sc.Subgraph[6];
-	SCSubgraphRef TotalAskVolumePercent = sc.Subgraph[7];
-	SCSubgraphRef TotalBidVolumePerTick = sc.Subgraph[8];
-	SCSubgraphRef TotalAskVolumePerTick = sc.Subgraph[9];
-	SCSubgraphRef ZPB = sc.Subgraph[10];
-	SCSubgraphRef ZPA = sc.Subgraph[11];
-	SCSubgraphRef BuyImbalanceHi = sc.Subgraph[12];
-	SCSubgraphRef SellImbalanceHi = sc.Subgraph[13];
-	SCSubgraphRef BuyImbalanceLo = sc.Subgraph[14];
-	SCSubgraphRef SellImbalanceLo = sc.Subgraph[15];
-	SCSubgraphRef AverageVolume = sc.Subgraph[16];
-	SCSubgraphRef VolumePerTick = sc.Subgraph[17];
-	SCSubgraphRef DeltaVolume = sc.Subgraph[18];
-	SCSubgraphRef Candle_Size = sc.Subgraph[19];
-	SCSubgraphRef ReducingVolumeBidTop = sc.Subgraph[20];
-	SCSubgraphRef ReducingVolumeBidBot = sc.Subgraph[21];
-	SCSubgraphRef ReducingVolumeAskTop = sc.Subgraph[22];
-	SCSubgraphRef ReducingVolumeAskBot = sc.Subgraph[23];
+	// SCSubgraphRef MaxBidVAP = sc.Subgraph[0];
+	// SCSubgraphRef MaxAskVAP = sc.Subgraph[1];
+	SCSubgraphRef MaxVAP = sc.Subgraph[sgctr++];
+	SCSubgraphRef MaxVAPPercent = sc.Subgraph[sgctr++];
+	SCSubgraphRef TotalBidVolume = sc.Subgraph[sgctr++];
+	SCSubgraphRef TotalAskVolume = sc.Subgraph[sgctr++];
+	SCSubgraphRef TotalBidVolumePercent = sc.Subgraph[sgctr++];
+	SCSubgraphRef TotalAskVolumePercent = sc.Subgraph[sgctr++];
+	SCSubgraphRef TotalBidVolumePerTick = sc.Subgraph[sgctr++];
+	SCSubgraphRef TotalAskVolumePerTick = sc.Subgraph[sgctr++];
+	SCSubgraphRef ZPB = sc.Subgraph[sgctr++];
+	SCSubgraphRef ZPA = sc.Subgraph[sgctr++];
+	SCSubgraphRef BuyImbalanceHi = sc.Subgraph[sgctr++];
+	SCSubgraphRef SellImbalanceHi = sc.Subgraph[sgctr++];
+	SCSubgraphRef BuyImbalanceLo = sc.Subgraph[sgctr++];
+	SCSubgraphRef SellImbalanceLo = sc.Subgraph[sgctr++];
+	SCSubgraphRef AverageVolume = sc.Subgraph[sgctr++];
+	SCSubgraphRef VolumePerTick = sc.Subgraph[sgctr++];
+	SCSubgraphRef DeltaVolume = sc.Subgraph[sgctr++];
+	SCSubgraphRef Candle_Size = sc.Subgraph[sgctr++];
+	SCSubgraphRef ReducingVolumeBidTop = sc.Subgraph[sgctr++];
+	SCSubgraphRef ReducingVolumeBidBot = sc.Subgraph[sgctr++];
+	SCSubgraphRef ReducingVolumeAskTop = sc.Subgraph[sgctr++];
+	SCSubgraphRef ReducingVolumeAskBot = sc.Subgraph[sgctr++];
 	
-	SCSubgraphRef LOBMinBidVAP = sc.Subgraph[24];
-	SCSubgraphRef LOBMinAskVAP = sc.Subgraph[25];
-	SCSubgraphRef LOBMaxBidVAP = sc.Subgraph[26];
-	SCSubgraphRef LOBMaxAskVAP = sc.Subgraph[27];
-	SCSubgraphRef LOBTotalBidVolume = sc.Subgraph[28];
-	SCSubgraphRef LOBTotalAskVolume = sc.Subgraph[29];
-	SCSubgraphRef LOBTotalBidVolumePercent = sc.Subgraph[30];
-	SCSubgraphRef LOBTotalAskVolumePercent = sc.Subgraph[31];
-	SCSubgraphRef LOBDeltaVolume = sc.Subgraph[32];
-	SCSubgraphRef LOBMinBidVolume = sc.Subgraph[33];
-	SCSubgraphRef LOBMinAskVolume = sc.Subgraph[34];
-	SCSubgraphRef LOBMaxBidVolume = sc.Subgraph[35];
-	SCSubgraphRef LOBMaxAskVolume = sc.Subgraph[36];
-	SCSubgraphRef LOBValidFlag = sc.Subgraph[37];
-	SCSubgraphRef LOBAvgBidVolume = sc.Subgraph[38];
-	SCSubgraphRef LOBAvgAskVolume = sc.Subgraph[39];
-	SCSubgraphRef LOBAvgVolume = sc.Subgraph[40];
+	SCSubgraphRef LOBMinBidVAP = sc.Subgraph[sgctr++];
+	SCSubgraphRef LOBMinAskVAP = sc.Subgraph[sgctr++];
+	SCSubgraphRef LOBMaxBidVAP = sc.Subgraph[sgctr++];
+	SCSubgraphRef LOBMaxAskVAP = sc.Subgraph[sgctr++];
+	SCSubgraphRef LOBTotalBidVolume = sc.Subgraph[sgctr++];
+	SCSubgraphRef LOBTotalAskVolume = sc.Subgraph[sgctr++];
+	SCSubgraphRef LOBTotalBidVolumePercent = sc.Subgraph[sgctr++];
+	SCSubgraphRef LOBTotalAskVolumePercent = sc.Subgraph[sgctr++];
+	SCSubgraphRef LOBDeltaVolume = sc.Subgraph[sgctr++];
+	SCSubgraphRef LOBMinBidVolume = sc.Subgraph[sgctr++];
+	SCSubgraphRef LOBMinAskVolume = sc.Subgraph[sgctr++];
+	SCSubgraphRef LOBMaxBidVolume = sc.Subgraph[sgctr++];
+	SCSubgraphRef LOBMaxAskVolume = sc.Subgraph[sgctr++];
+	SCSubgraphRef LOBValidFlag = sc.Subgraph[sgctr++];
+	SCSubgraphRef LOBAvgBidVolume = sc.Subgraph[sgctr++];
+	SCSubgraphRef LOBAvgAskVolume = sc.Subgraph[sgctr++];
+	SCSubgraphRef LOBAvgVolume = sc.Subgraph[sgctr++];
 
-	SCSubgraphRef MaxBidVolume = sc.Subgraph[41];
-	SCSubgraphRef MaxAskVolume = sc.Subgraph[42];
+	SCSubgraphRef MaxBidVolume = sc.Subgraph[sgctr++];
+	SCSubgraphRef MaxAskVolume = sc.Subgraph[sgctr++];
 	
-	SCSubgraphRef LOBCurBidVolume = sc.Subgraph[43];
-	SCSubgraphRef LOBCurAskVolume = sc.Subgraph[44];
-	SCSubgraphRef CurPrice = sc.Subgraph[45];
-	SCSubgraphRef VWAPPrice = sc.Subgraph[46];
+	SCSubgraphRef LOBCurBidVolume = sc.Subgraph[sgctr++];
+	SCSubgraphRef LOBCurAskVolume = sc.Subgraph[sgctr++];
+	SCSubgraphRef CurPrice = sc.Subgraph[sgctr++];
+	SCSubgraphRef VWAPPrice = sc.Subgraph[sgctr++];
 	
-	SCSubgraphRef UBHi = sc.Subgraph[47];
-	SCSubgraphRef UBLo = sc.Subgraph[48];
-	SCSubgraphRef NumBuyImb = sc.Subgraph[49];
-	SCSubgraphRef NumSellImb = sc.Subgraph[50];
-	SCSubgraphRef NumBuyZP = sc.Subgraph[51];
-	SCSubgraphRef NumSellZP = sc.Subgraph[52];
-	SCSubgraphRef BuyImbalanceRatioHi = sc.Subgraph[53];
-	SCSubgraphRef SellImbalanceRatioHi = sc.Subgraph[54];
-	SCSubgraphRef BuyImbalanceRatioLo = sc.Subgraph[55];
-	SCSubgraphRef SellImbalanceRatioLo = sc.Subgraph[56];
-	
+	SCSubgraphRef UBHi = sc.Subgraph[sgctr++];
+	SCSubgraphRef UBLo = sc.Subgraph[sgctr++];
+	SCSubgraphRef NumBuyImb = sc.Subgraph[sgctr++];
+	SCSubgraphRef NumSellImb = sc.Subgraph[sgctr++];
+	SCSubgraphRef NumBuyZP = sc.Subgraph[sgctr++];
+	SCSubgraphRef NumSellZP = sc.Subgraph[sgctr++];
+	SCSubgraphRef BuyImbalanceRatioHi = sc.Subgraph[sgctr++];
+	SCSubgraphRef SellImbalanceRatioHi = sc.Subgraph[sgctr++];
+	SCSubgraphRef BuyImbalanceRatioLo = sc.Subgraph[sgctr++];
+	SCSubgraphRef SellImbalanceRatioLo = sc.Subgraph[sgctr++];
+	SCSubgraphRef BuyExhaust = sc.Subgraph[sgctr++];
+	SCSubgraphRef SellExhaust = sc.Subgraph[sgctr++];
+
+	SCSubgraphRef BuyExhRatio = sc.Subgraph[sgctr++];
+	SCSubgraphRef SellExhRatio = sc.Subgraph[sgctr++];
+//	SCSubgraphRef SignalsInTopTail = sc.Subgraph[61];
+//	SCSubgraphRef SignalsInBotTail = sc.Subgraph[62];
+	// SCSubgraphRef SCIndex = sc.Subgraph[63];
+
 	if (sc.HideStudy == 1)
 		return;
 
@@ -154,7 +165,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       
       // During development set this flag to 1, so the DLL can be modified. When development is done, set it to 0 to improve performance.
       sc.FreeDLL = 0;
-      sc.DrawStudyUnderneathMainPriceGraph = 1;
+      sc.DrawStudyUnderneathMainPriceGraph = 0;
       sc.MaintainHistoricalMarketDepthData = 1;
       sc.MaintainVolumeAtPriceData = 1;
 
@@ -164,7 +175,8 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       sc.GraphRegion = 0;
       sc.ScaleRangeType = SCALE_SAMEASREGION;
 
-      MaxBidVAP.Name = "MaxBidVAP";
+	  /*
+	  MaxBidVAP.Name = "MaxBidVAP";
       MaxBidVAP.DrawStyle = DRAWSTYLE_IGNORE;
       MaxBidVAP.LineWidth = 1;
       MaxBidVAP.PrimaryColor = RGB(255,128,128); // light red
@@ -173,6 +185,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       MaxAskVAP.DrawStyle = DRAWSTYLE_IGNORE;
       MaxAskVAP.LineWidth = 1;
       MaxAskVAP.PrimaryColor = COLOR_GREEN;
+	  */
 
       MaxVAP.Name = "MaxVAP";
       MaxVAP.DrawStyle = DRAWSTYLE_DASH;
@@ -303,11 +316,15 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	  
 	  DebugLog.Name = "Log Debug Data (1=Yes, 0=No)";
 	  DebugLog.SetInt(0);
-	  DebugLog.SetIntLimits(0,0);
+	  DebugLog.SetIntLimits(0,1);
 	  
 	  MarketDepthLimit.Name = "Limit To Levels Of Market Depth Analysis";
 	  MarketDepthLimit.SetInt(21);
 	  MarketDepthLimit.SetIntLimits(1,999);
+
+	  ExhaustRatio.Name = "Exhaustion Ratio";
+	  ExhaustRatio.SetInt(30);
+	  ExhaustRatio.SetIntLimits(2, 1000);
 	  
       VolumePerTick.Name = "Volume Per Tick";
       VolumePerTick.DrawStyle = DRAWSTYLE_IGNORE;
@@ -352,28 +369,28 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       ReducingVolumeAskBot.PrimaryColor = RGB(255,0,0); // dark red
 
       LOBMinBidVAP.Name = "LOBMinAskVAP";
-      LOBMinBidVAP.DrawStyle = DRAWSTYLE_LINE;
+      LOBMinBidVAP.DrawStyle = DRAWSTYLE_IGNORE;
       LOBMinBidVAP.LineWidth = 2;
       LOBMinBidVAP.PrimaryColor = RGB(128,255,255); // light cyan
 	  LOBMinBidVAP.ShortName = "LOBMinAsk";
 	  LOBMinBidVAP.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
 
       LOBMinAskVAP.Name = "LOBMinBidVAP";
-      LOBMinAskVAP.DrawStyle = DRAWSTYLE_LINE;
+      LOBMinAskVAP.DrawStyle = DRAWSTYLE_IGNORE;
       LOBMinAskVAP.LineWidth = 2;
       LOBMinAskVAP.PrimaryColor = RGB(255,128,128); // light red
       LOBMinAskVAP.ShortName = "LOBMinBid";
 	  LOBMinAskVAP.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
 
       LOBMaxBidVAP.Name = "LOBMaxAskVAP";
-      LOBMaxBidVAP.DrawStyle = DRAWSTYLE_LINE;
+      LOBMaxBidVAP.DrawStyle = DRAWSTYLE_IGNORE;
       LOBMaxBidVAP.LineWidth = 4;
       LOBMaxBidVAP.PrimaryColor = RGB(128,255,255); // light cyan
       LOBMaxBidVAP.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       LOBMaxBidVAP.ShortName = "LOBMaxAsk";
 
       LOBMaxAskVAP.Name = "LOBMaxBidVAP";
-      LOBMaxAskVAP.DrawStyle = DRAWSTYLE_LINE;
+      LOBMaxAskVAP.DrawStyle = DRAWSTYLE_IGNORE;
       LOBMaxAskVAP.LineWidth = 4;
       LOBMaxAskVAP.PrimaryColor = RGB(255,128,128); // light red
       LOBMaxAskVAP.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
@@ -460,14 +477,14 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       LOBValidFlag.PrimaryColor = COLOR_BLACK;
 
       UBHi.Name = "Unfinished Business Hi";
-      UBHi.DrawStyle = DRAWSTYLE_DASH;
+      UBHi.DrawStyle = DRAWSTYLE_IGNORE;
       UBHi.LineWidth = 1;
       UBHi.PrimaryColor = RGB(255,128,64); // orange
 	  UBHi.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       UBHi.ShortName = "UFBT";
 	  
       UBLo.Name = "Unfinished Business Low";
-      UBLo.DrawStyle = DRAWSTYLE_DASH;
+      UBLo.DrawStyle = DRAWSTYLE_IGNORE;
       UBLo.LineWidth = 1;
       UBLo.PrimaryColor = RGB(255,128,64); // orange
 	  UBLo.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
@@ -493,7 +510,65 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       NumSellZP.LineWidth = 2;
       NumSellZP.PrimaryColor = RGB(255,128,128); // light red
 
-      return;
+	  BuyExhaust.Name = "Buy Exhaustion";
+	  BuyExhaust.DrawStyle = DRAWSTYLE_DASH;
+	  BuyExhaust.LineWidth = 2;
+	  BuyExhaust.PrimaryColor = RGB(255, 227, 150); // sand
+	  BuyExhaust.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
+	  BuyExhaust.ShortName = "BUYEX";
+
+	  SellExhaust.Name = "Sell Exhaustion";
+	  SellExhaust.DrawStyle = DRAWSTYLE_DASH;
+	  SellExhaust.LineWidth = 2;
+	  SellExhaust.PrimaryColor = RGB(150, 255, 227); // light teal
+	  SellExhaust.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
+	  SellExhaust.ShortName = "SELLEX";
+
+	  BuyExhaust.Name = "Buy Exhaustion";
+	  BuyExhaust.DrawStyle = DRAWSTYLE_DASH;
+	  BuyExhaust.LineWidth = 2;
+	  BuyExhaust.PrimaryColor = RGB(255, 227, 150); // sand
+	  BuyExhaust.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
+	  BuyExhaust.ShortName = "BUYEX";
+
+	  SellExhaust.Name = "Sell Exhaustion";
+	  SellExhaust.DrawStyle = DRAWSTYLE_DASH;
+	  SellExhaust.LineWidth = 2;
+	  SellExhaust.PrimaryColor = RGB(150, 255, 227); // light teal
+	  SellExhaust.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
+	  SellExhaust.ShortName = "SELLEX";
+
+
+	  BuyExhRatio.Name = "Buy Exhaustion Ratio";
+	  BuyExhRatio.DrawStyle = DRAWSTYLE_IGNORE;
+	  BuyExhRatio.LineWidth = 2;
+	  BuyExhRatio.PrimaryColor = COLOR_GREEN;
+
+	  SellExhRatio.Name = "Sell Exhaustion Ratio";
+	  SellExhRatio.DrawStyle = DRAWSTYLE_IGNORE;
+	  SellExhRatio.LineWidth = 2;
+	  SellExhRatio.PrimaryColor = RGB(255, 128, 128); // light red
+
+	  /*
+	  SignalsInTopTail.Name = "Number of signals in top tail";
+	  SignalsInTopTail.DrawStyle = DRAWSTYLE_IGNORE;
+	  SignalsInTopTail.LineWidth = 2;
+	  SignalsInTopTail.PrimaryColor = COLOR_GREEN;
+
+	  SignalsInBotTail.Name = "Number of signals in bottom tail";
+	  SignalsInBotTail.DrawStyle = DRAWSTYLE_IGNORE;
+	  SignalsInBotTail.LineWidth = 2;
+	  SignalsInBotTail.PrimaryColor = RGB(255, 128, 128); // light red
+	  */
+
+/*
+	  SCIndex.Name = "Current Index";
+	  SCIndex.DrawStyle = DRAWSTYLE_IGNORE;
+	  SCIndex.LineWidth = 2;
+	  SCIndex.PrimaryColor = COLOR_WHITE;
+*/
+
+	  return;
    }
 
    if ((int)sc.VolumeAtPriceForBars->GetNumberOfBars() < sc.ArraySize)
@@ -580,6 +655,14 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	// AverageVolume[sc.Index] = TotalVolume / sc.ArraySize;
 	
 	/* Get active filled order data */
+
+	/*
+    Count = 4, MinBarSize = 3, Index = 3, BidVolume = 0, AskVolume = 51, Price = 4508.50
+	Count = 4, MinBarSize = 3, Index = 2, BidVolume = 83, AskVolume = 153, Price = 4508.25
+	Count = 4, MinBarSize = 3, Index = 1, BidVolume = 183, AskVolume = 141, Price = 4508.00
+	Count = 4, MinBarSize = 3, Index = 0, BidVolume = 33, AskVolume = 0, Price = 4507.75
+	*/
+
 	
 	TV = 0L;
 	PTV = 0.0;
@@ -807,7 +890,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 			 if (DebugLog.GetInt() == 1)
 			 {
 				 sprintf(scratchmsg, "Sell Imbalance: (BidVolume[%d]) (%d) > AskVolume[%d] (%d) * %d (%d) | ElementIndex=%d, Count=%d\n",
-				 ElementIndex, BidArray[ElementIndex], ElementIndex+1, AskArray[ElementIndex+1], ImbRatio, ElementIndex+1, AskArray[ElementIndex+1] * ImbRatio, ElementIndex, Count);
+				 ElementIndex, BidArray[ElementIndex], ElementIndex+1, AskArray[ElementIndex+1], ImbRatio, AskArray[ElementIndex+1] * ImbRatio, ElementIndex, Count);
 				 sc.AddMessageToLog(scratchmsg, 1);
 			 }
 			 CountSellImb++;
@@ -861,25 +944,48 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 			
    }
    
-   /* Unfinished Business */
+   /********************************************************
+	* Zero print and buy/sell imbalance detection code END *
+	********************************************************/
+
+	/* Unfinished Business */
    
    UBHi[sc.Index] = UBLo[sc.Index] = 0;
-   if (AskArray[0] > 0 && BidArray[0] > 0) UBHi[sc.Index] = PriceArray[0];
-   if (AskArray[Count - 1] > 0 && BidArray[Count - 1] > 0) UBLo[sc.Index] = PriceArray[0];
+   if (AskArray[0] > 0 && BidArray[0] > 0) UBLo[sc.Index] = PriceArray[0];
+   if (AskArray[Count - 1] > 0 && BidArray[Count - 1] > 0) UBHi[sc.Index] = PriceArray[Count - 1];
+   /*
+   if (UBHi[sc.Index] > 0 || UBLo[sc.Index] > 0)
+   {
+	   sprintf(scratchmsg, "UB: AA[0] = %d, BA[0] = %d, AA[%d] = %d, BA[%d] = %d\n", AskArray[0], BidArray[0], Count - 1, AskArray[Count - 1], Count - 1, BidArray[Count - 1]);
+	   sc.AddMessageToLog(scratchmsg, 1);
+   }
+   */
    
    if (DebugLog.GetInt() == 1 && (CountBuyImb > 0 || CountSellImb > 0))
    {
 	   sprintf(scratchmsg, "COUNTIMB: Buy Imb=%d, Sell Imb=%d, Buy ZP=%d, Sell ZP=%d\n", CountBuyImb, CountSellImb, CountBuyZP, CountSellZP);
 	   sc.AddMessageToLog(scratchmsg, 1);
    }
-   
-   /********************************************************
-    * Zero print and buy/sell imbalance detection code END *
-	********************************************************/
+
+   /**************************************
+    * Buy/sell exhaustion detection code *
+    **************************************/
+
+   BuyExhaust[sc.Index] = SellExhaust[sc.Index] = BuyExhRatio[sc.Index] = SellExhRatio[sc.Index] = 0;
+   if (Count > 1)
+   {
+	   BuyExhRatio[sc.Index] = AskArray[Count - 2] / (AskArray[Count - 1] == 0 ? 1 : AskArray[Count - 1]);
+	   SellExhRatio[sc.Index] = BidArray[1] / (BidArray[0] == 0 ? 1 : BidArray[0]);
+
+	   if (BuyExhRatio[sc.Index] >= ExhaustRatio.GetInt())
+		   BuyExhaust[sc.Index] = PriceArray[Count - 2];
+	   if (SellExhRatio[sc.Index] >= ExhaustRatio.GetInt())
+		   SellExhaust[sc.Index] = PriceArray[1];
+   }
    
    MaxVAP[sc.Index] = MaxVolumePrice;
-   MaxBidVAP[sc.Index] = MaxBidVolumePrice;
-   MaxAskVAP[sc.Index] = MaxAskVolumePrice;
+//    MaxBidVAP[sc.Index] = MaxBidVolumePrice;
+//    MaxAskVAP[sc.Index] = MaxAskVolumePrice;
    MaxVAPPercent[sc.Index] = ((MaxVolumePrice - sc.Low[sc.Index]) / (sc.High[sc.Index] - sc.Low[sc.Index])) * 100.0;
    TotalBidVolume[sc.Index] = TBV;
    TotalAskVolume[sc.Index] = TAV;
@@ -939,6 +1045,9 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    LOBCurBidVolume[sc.Index] = xLOBCurBidVolume;
    LOBCurAskVolume[sc.Index] = xLOBCurAskVolume;
    CurPrice[sc.Index] = sc.Close[sc.Index];
+//    SignalsInTopTail[sc.Index] = 0;
+//    SignalsInBotTail[sc.Index] = 0;
+//    SCIndex[sc.Index] = sc.Index;
    /*
    if (MaxBidVolume > MaxAskVolume)
 	   MaxVAP.PrimaryColor[sc.Index] = COLOR_RED;
