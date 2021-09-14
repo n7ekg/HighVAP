@@ -31,6 +31,8 @@ int InLowPin(float PRICE)
 SCDLLName("High Volume At Price v0.4g") 
 const char EXPIRATION_DATE[] = "2022-01-01";
 char scratchmsg[255];
+int sgctr;
+FILE *fout;
 
 // Friendly Names for Colors
 const unsigned int RGB_Red = RGB(255, 0, 0);
@@ -71,8 +73,8 @@ bool IsExpired(SCStudyInterfaceRef sc)
 
 SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 {
-	int sgctr = 0;
 
+	sgctr = 0;
 	SCInputRef ImbalanceRatio = sc.Input[0];
 	SCInputRef MinimumBarSize = sc.Input[1];
 	SCInputRef CompareLevels = sc.Input[2];
@@ -150,8 +152,8 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 //	SCSubgraphRef SignalsInBotTail = sc.Subgraph[62];
 	// SCSubgraphRef SCIndex = sc.Subgraph[63];
 
-	if (sc.HideStudy == 1)
-		return;
+	// if (sc.HideStudy == 1)
+	// 	return;
 
    if (IsExpired(sc))
     {
@@ -624,13 +626,18 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    float xCurPrice = 0.0;
    int CountBuyImb = 0, CountSellImb = 0;
    int CountBuyZP = 0, CountSellZP = 0;
+   int DebugFlag = 0;
    
    s_VolumeAtPriceV2* p_VolumeAtPriceAtIndex = 0;
    s_MarketDepthEntry DepthEntry;
    
-   DebugLog.SetInt(0);
-   
-  if (DebugLog.GetInt() == 1)
+   if (DebugLog.GetInt() == 1)
+   {
+	   DebugFlag = 1;
+	   DebugLog.SetInt(0);
+   }
+
+   if (DebugLog.GetInt() == 1)
   {
 	  sprintf(scratchmsg, "LOBCount=%d, MarketDepthLimit=%d, GetBidMarketDepthNumberOfLevels=%d, GetAskMarketDepthNumberOfLevels=%d\n",
 		LOBCount, MarketDepthLimit.GetInt(), sc.GetBidMarketDepthNumberOfLevels(), sc.GetAskMarketDepthNumberOfLevels());
@@ -915,12 +922,12 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		/* Check buy/sell imbalance at the top of the bar */
 		for (int ElementIndex = Count - 3; ElementIndex < Count; ElementIndex++)
 		{
-			if (AskArray[ElementIndex] >= ((BidArray[ElementIndex-1] + 1) * ImbRatio))
+			if (AskArray[ElementIndex] >= ((BidArray[ElementIndex-1] == 0 ? 1 : BidArray[ElementIndex - 1]) * ImbRatio))
 			{
 				AIMBPriceHi = PriceArray[ElementIndex];
 				if (AskArray[ElementIndex] > 0 && BidArray[ElementIndex-1] > 0) AIMBRatioHi = AskArray[ElementIndex] / BidArray[ElementIndex-1];
 			}
-			if ((BidArray[ElementIndex-1]) >= ((AskArray[ElementIndex] + 1) * ImbRatio))
+			if ((BidArray[ElementIndex-1]) >= ((AskArray[ElementIndex - 1] == 0 ? 1 : AskArray[ElementIndex - 1]) * ImbRatio))
 			{
 				BIMBPriceHi = PriceArray[ElementIndex-1];
 				if (BidArray[ElementIndex-1] > 0 && AskArray[ElementIndex] > 0) BIMBRatioHi = BidArray[ElementIndex-1] / AskArray[ElementIndex];
@@ -928,6 +935,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		}
 		
 		/* Now do it at the bottom of the bar */
+		// Do we neeed to check for 0 at the bottom of the bar? FIXME
 		for (int ElementIndex = 2; ElementIndex >= 0; ElementIndex--)
 		{
 			if (AskArray[ElementIndex+1] >= (BidArray[ElementIndex] * ImbRatio))
@@ -974,8 +982,8 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    BuyExhaust[sc.Index] = SellExhaust[sc.Index] = BuyExhRatio[sc.Index] = SellExhRatio[sc.Index] = 0;
    if (Count > 1)
    {
-	   BuyExhRatio[sc.Index] = AskArray[Count - 2] / (AskArray[Count - 1] == 0 ? 1 : AskArray[Count - 1]);
-	   SellExhRatio[sc.Index] = BidArray[1] / (BidArray[0] == 0 ? 1 : BidArray[0]);
+	   BuyExhRatio[sc.Index] = ((float)AskArray[Count - 2] / (float)(AskArray[Count - 1] == 0 ? 1 : AskArray[Count - 1]));
+	   SellExhRatio[sc.Index] = ((float)BidArray[1] / (float)(BidArray[0] == 0 ? 1 : BidArray[0]));
 
 	   if (BuyExhRatio[sc.Index] >= ExhaustRatio.GetInt())
 		   BuyExhaust[sc.Index] = PriceArray[Count - 2];
@@ -1054,4 +1062,13 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    if (MaxBidVolume < MaxAskVolume)
 	   MaxVAP.PrimaryColor[sc.Index] = COLOR_GREEN;
    */
+   if (DebugFlag = 1)
+   {
+	   DebugFlag = 0;
+	   fopen("OrderFlow.csv", "w");
+	   fprintf(fout, "Subgraph,Name,Value\n);");
+	   for (i = 0; i < sgctr; i++)
+		   fprintf(fout, "SG%d,\"%s\", \"%s\"\n", i+1, SCSubgraphRef[i][sc.Index].Name, SCSubgraphRef[i][sc.Index]);
+	   fclose(fout);
+   }
 }
