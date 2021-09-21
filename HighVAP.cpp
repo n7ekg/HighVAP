@@ -256,12 +256,12 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       ZPA.LineWidth = 2;
       ZPA.PrimaryColor = RGB(255,128,128); // light red;
 
-      BuyImbalanceHi.Name = "Buy Imbalance Top";
+      BuyImbalanceHi.Name = "Buy Absorption Top";
       BuyImbalanceHi.DrawStyle = DRAWSTYLE_DASH;
       BuyImbalanceHi.LineWidth = 1;
       BuyImbalanceHi.PrimaryColor = RGB(0,255,255); // cyan
       BuyImbalanceHi.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
-      BuyImbalanceHi.ShortName = "BIMBT";
+      BuyImbalanceHi.ShortName = "BUYABS";
 
       SellImbalanceHi.Name = "Sell Imbalance Top";
       SellImbalanceHi.DrawStyle = DRAWSTYLE_DASH;
@@ -277,14 +277,14 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       BuyImbalanceLo.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       BuyImbalanceLo.ShortName = "BIMBB";
 
-      SellImbalanceLo.Name = "Sell Imbalance Bottom";
+      SellImbalanceLo.Name = "Sell Absorption Bottom";
       SellImbalanceLo.DrawStyle = DRAWSTYLE_DASH;
       SellImbalanceLo.LineWidth = 1;
       SellImbalanceLo.PrimaryColor = RGB(255,128,128); // light red;
       SellImbalanceLo.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
-      SellImbalanceLo.ShortName = "SIMBB";
+      SellImbalanceLo.ShortName = "SELLABS";
 	  
-      BuyImbalanceRatioHi.Name = "Buy Imbalance Ratio Top";
+      BuyImbalanceRatioHi.Name = "Buy Absorption Ratio Top";
       BuyImbalanceRatioHi.DrawStyle = DRAWSTYLE_IGNORE;
       BuyImbalanceRatioHi.LineWidth = 2;
       BuyImbalanceRatioHi.PrimaryColor = RGB(255,255,255); // white;
@@ -299,7 +299,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       SellImbalanceRatioHi.LineWidth = 2;
       SellImbalanceRatioHi.PrimaryColor = RGB(255,255,255); // white;
 
-      SellImbalanceRatioLo.Name = "Sell Imbalance Ratio Bottom";
+      SellImbalanceRatioLo.Name = "Sell Absorption Ratio Bottom";
       SellImbalanceRatioLo.DrawStyle = DRAWSTYLE_IGNORE;
       SellImbalanceRatioLo.LineWidth = 2;
       SellImbalanceRatioLo.PrimaryColor = RGB(255,255,255); // white;
@@ -1062,6 +1062,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    if (MaxBidVolume < MaxAskVolume)
 	   MaxVAP.PrimaryColor[sc.Index] = COLOR_GREEN;
    */
+   /*
    if (DebugFlag = 1)
    {
 	   DebugFlag = 0;
@@ -1071,4 +1072,5 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		   fprintf(fout, "SG%d,\"%s\", \"%s\"\n", i+1, SCSubgraphRef[i][sc.Index].Name, SCSubgraphRef[i][sc.Index]);
 	   fclose(fout);
    }
+   */
 }
