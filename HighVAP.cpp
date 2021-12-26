@@ -155,12 +155,14 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	// if (sc.HideStudy == 1)
 	// 	return;
 
-   if (IsExpired(sc))
+   /*
+    if (IsExpired(sc))
     {
         sprintf(scratchmsg, "DLL expired on %s\n", EXPIRATION_DATE);
         sc.AddMessageToLog(scratchmsg, 1);
         return;
     }
+    */
 
    if (sc.SetDefaults)
    {
