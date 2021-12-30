@@ -988,9 +988,9 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	   SellExhRatio[sc.Index] = ((float)BidArray[1] / (float)(BidArray[0] == 0 ? 1 : BidArray[0]));
 
 	   if (BuyExhRatio[sc.Index] >= ExhaustRatio.GetInt())
-		   BuyExhaust[sc.Index] = PriceArray[Count - 2];
+		   BuyExhaust[sc.Index] = PriceArray[Count - 1];
 	   if (SellExhRatio[sc.Index] >= ExhaustRatio.GetInt())
-		   SellExhaust[sc.Index] = PriceArray[1];
+		   SellExhaust[sc.Index] = PriceArray[0];
    }
    
    MaxVAP[sc.Index] = MaxVolumePrice;
