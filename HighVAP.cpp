@@ -85,7 +85,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	// SCSubgraphRef MaxBidVAP = sc.Subgraph[0];
 	// SCSubgraphRef MaxAskVAP = sc.Subgraph[1];
 	SCSubgraphRef MaxVAP = sc.Subgraph[sgctr++];
-	SCSubgraphRef MaxVAPPercent = sc.Subgraph[sgctr++];
+	SCSubgraphRef MaxVAPVolume = sc.Subgraph[sgctr++];
 	SCSubgraphRef TotalBidVolume = sc.Subgraph[sgctr++];
 	SCSubgraphRef TotalAskVolume = sc.Subgraph[sgctr++];
 	SCSubgraphRef TotalBidVolumePercent = sc.Subgraph[sgctr++];
@@ -198,10 +198,10 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       MaxVAP.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       MaxVAP.ShortName = "VPOC";
 
-      MaxVAPPercent.Name = "MaxVAPPercent";
-      MaxVAPPercent.DrawStyle = DRAWSTYLE_IGNORE;
-      MaxVAPPercent.LineWidth = 2;
-      MaxVAPPercent.PrimaryColor = COLOR_YELLOW;
+      MaxVAPVolume.Name = "MaxVAPVolume";
+      MaxVAPVolume.DrawStyle = DRAWSTYLE_IGNORE;
+      MaxVAPVolume.LineWidth = 2;
+      MaxVAPVolume.PrimaryColor = COLOR_YELLOW;
 
       TotalBidVolume.Name = "TotalBidVolume";
       TotalBidVolume.DrawStyle = DRAWSTYLE_IGNORE;
@@ -996,7 +996,8 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    MaxVAP[sc.Index] = MaxVolumePrice;
 //    MaxBidVAP[sc.Index] = MaxBidVolumePrice;
 //    MaxAskVAP[sc.Index] = MaxAskVolumePrice;
-   MaxVAPPercent[sc.Index] = ((MaxVolumePrice - sc.Low[sc.Index]) / (sc.High[sc.Index] - sc.Low[sc.Index])) * 100.0;
+//    MaxVAPPercent[sc.Index] = ((MaxVolumePrice - sc.Low[sc.Index]) / (sc.High[sc.Index] - sc.Low[sc.Index])) * 100.0;
+   MaxVAPVolume[sc.Index] = MaxVolume;
    TotalBidVolume[sc.Index] = TBV;
    TotalAskVolume[sc.Index] = TAV;
 
