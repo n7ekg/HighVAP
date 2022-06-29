@@ -35,22 +35,27 @@ int sgctr;
 FILE *fout;
 
 // Friendly Names for Colors
-const unsigned int RGB_Red = RGB(255, 0, 0);
-const unsigned int RGB_Red210 = RGB(210, 0, 0);
-const unsigned int RGB_Green = RGB(0, 255, 0);
-const unsigned int RGB_Green210 = RGB(0, 210, 0);
-const unsigned int RGB_Blue = RGB(0, 0, 255);
-const unsigned int RGB_Magenta = RGB(255, 0, 255);
-const unsigned int RGB_Yellow = RGB(255, 255, 0);
-const unsigned int RGB_LightYellow = RGB(255, 255, 128);
-const unsigned int RGB_Cyan = RGB(0, 255, 255);
-const unsigned int RGB_Cyan210 = RGB(0, 210, 210);
-const unsigned int RGB_White = RGB(255, 255, 255);
-const unsigned int RGB_Black = RGB(0, 0, 0);
-const unsigned int RGB_Pink = RGB(255, 128, 192);
-const unsigned int RGB_Purple = RGB(128, 128, 192);
-const unsigned int RGB_LimeGreen = RGB(128, 255, 0);
-const unsigned int RGB_HotPink = RGB(255, 0, 128);
+const unsigned int RGB_Red = RGB (255, 0, 0);
+const unsigned int RGB_Red210 = RGB (210, 0, 0);
+const unsigned int RGB_Green = RGB (0, 255, 0);
+const unsigned int RGB_Green210 = RGB (0, 210, 0);
+const unsigned int RGB_Blue = RGB (0, 0, 255);
+const unsigned int RGB_Magenta = RGB (255, 0, 255);
+const unsigned int RGB_Yellow = RGB (255, 255, 0);
+const unsigned int RGB_LightYellow = RGB (255, 255, 128);
+const unsigned int RGB_Cyan = RGB (0, 255, 255);
+const unsigned int RGB_LightCyan = RGB (128, 255, 255);
+const unsigned int RGB_Cyan210 = RGB (0, 210, 210);
+const unsigned int RGB_White = RGB (255, 255, 255);
+const unsigned int RGB_Black = RGB (0, 0, 0);
+const unsigned int RGB_Pink = RGB (255, 128, 192);
+const unsigned int RGB_Purple = RGB (128, 128, 192);
+const unsigned int RGB_LightGreen = RGB (128, 255, 0);
+const unsigned int RGB_HotPink = RGB (255, 0, 128);
+const unsigned int RGB_LightRed = RGB (255, 128, 128);
+const unsigned int RGB_Orange = RGB (255, 128, 64);
+const unsigned int RGB_Sand = RGB (255, 227, 150);
+const unsigned int RGB_LightTeal = RGB (150, 255, 227);
 
 SCDateTime GetNow(SCStudyInterfaceRef sc) 
 {
@@ -74,6 +79,9 @@ bool IsExpired(SCStudyInterfaceRef sc)
 SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 {
 
+	if (sc.HideStudy == 1)
+		return;
+
 	sgctr = 0;
 	SCInputRef ImbalanceRatio = sc.Input[0];
 	SCInputRef MinimumBarSize = sc.Input[1];
@@ -88,8 +96,10 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	SCSubgraphRef MaxVAPVolume = sc.Subgraph[sgctr++];
 	SCSubgraphRef TotalBidVolume = sc.Subgraph[sgctr++];
 	SCSubgraphRef TotalAskVolume = sc.Subgraph[sgctr++];
-	SCSubgraphRef TotalBidVolumePercent = sc.Subgraph[sgctr++];
-	SCSubgraphRef TotalAskVolumePercent = sc.Subgraph[sgctr++];
+	// SCSubgraphRef TotalBidVolumePercent = sc.Subgraph[sgctr++];
+	// SCSubgraphRef TotalAskVolumePercent = sc.Subgraph[sgctr++];
+    SCSubgraphRef MaxBidVAP = sc.Subgraph[sgctr++];
+    SCSubgraphRef MaxAskVAP = sc.Subgraph[sgctr++];
 	SCSubgraphRef TotalBidVolumePerTick = sc.Subgraph[sgctr++];
 	SCSubgraphRef TotalAskVolumePerTick = sc.Subgraph[sgctr++];
 	SCSubgraphRef ZPB = sc.Subgraph[sgctr++];
@@ -152,9 +162,6 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 //	SCSubgraphRef SignalsInBotTail = sc.Subgraph[62];
 	// SCSubgraphRef SCIndex = sc.Subgraph[63];
 
-	// if (sc.HideStudy == 1)
-	// 	return;
-
    /*
     if (IsExpired(sc))
     {
@@ -179,17 +186,15 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       sc.GraphRegion = 0;
       sc.ScaleRangeType = SCALE_SAMEASREGION;
 
-	  /*
-	  MaxBidVAP.Name = "MaxBidVAP";
-      MaxBidVAP.DrawStyle = DRAWSTYLE_IGNORE;
+	  MaxBidVAP.Name = "MaxBidPrice";
+      MaxBidVAP.DrawStyle = DRAWSTYLE_LEFT_PRICE_BAR_DASH; // left dash
       MaxBidVAP.LineWidth = 1;
-      MaxBidVAP.PrimaryColor = RGB(255,128,128); // light red
+      MaxBidVAP.PrimaryColor = RGB_LightRed; // light red
 
-      MaxAskVAP.Name = "MaxAskVAP";
-      MaxAskVAP.DrawStyle = DRAWSTYLE_IGNORE;
+      MaxAskVAP.Name = "MaxAskPrice";
+      MaxAskVAP.DrawStyle = DRAWSTYLE_RIGHT_PRICE_BAR_DASH; // right dash
       MaxAskVAP.LineWidth = 1;
       MaxAskVAP.PrimaryColor = COLOR_GREEN;
-	  */
 
       MaxVAP.Name = "MaxVAP";
       MaxVAP.DrawStyle = DRAWSTYLE_DASH;
@@ -213,6 +218,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       TotalAskVolume.LineWidth = 2;
       TotalAskVolume.PrimaryColor = COLOR_YELLOW;
 
+      /*
       TotalBidVolumePercent.Name = "TotalBidVolumePercent";
       TotalBidVolumePercent.DrawStyle = DRAWSTYLE_IGNORE;
       TotalBidVolumePercent.LineWidth = 2;
@@ -222,6 +228,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       TotalAskVolumePercent.DrawStyle = DRAWSTYLE_IGNORE;
       TotalAskVolumePercent.LineWidth = 2;
       TotalAskVolumePercent.PrimaryColor = COLOR_YELLOW;
+      */
 
       TotalBidVolumePerTick.Name = "TotalBidVolumePerTick";
       TotalBidVolumePerTick.DrawStyle = DRAWSTYLE_IGNORE;
@@ -241,7 +248,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       MaxBidVolume.Name = "MaxBidVolume";
       MaxBidVolume.DrawStyle = DRAWSTYLE_IGNORE;
       MaxBidVolume.LineWidth = 2;
-      MaxBidVolume.PrimaryColor = RGB(255,128,128); // light red
+      MaxBidVolume.PrimaryColor = RGB_LightRed; // light red
 
       MaxAskVolume.Name = "MaxAskVolume";
       MaxAskVolume.DrawStyle = DRAWSTYLE_IGNORE;
@@ -256,58 +263,58 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       ZPA.Name = "Zero-Print Ask";
       ZPA.DrawStyle = DRAWSTYLE_IGNORE;
       ZPA.LineWidth = 2;
-      ZPA.PrimaryColor = RGB(255,128,128); // light red;
+      ZPA.PrimaryColor = RGB_LightRed; // light red;
 
       BuyImbalanceHi.Name = "Buy Absorption Top";
       BuyImbalanceHi.DrawStyle = DRAWSTYLE_DASH;
-      BuyImbalanceHi.LineWidth = 1;
-      BuyImbalanceHi.PrimaryColor = RGB(0,255,255); // cyan
+      BuyImbalanceHi.LineWidth = 2;
+      BuyImbalanceHi.PrimaryColor = RGB_LightRed;
       BuyImbalanceHi.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       BuyImbalanceHi.ShortName = "BUYABS";
 
       SellImbalanceHi.Name = "Sell Imbalance Top";
       SellImbalanceHi.DrawStyle = DRAWSTYLE_DASH;
       SellImbalanceHi.LineWidth = 1;
-      SellImbalanceHi.PrimaryColor = RGB(255,128,128); // light red;
+      SellImbalanceHi.PrimaryColor = RGB_LightRed; // light red;
       SellImbalanceHi.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       SellImbalanceHi.ShortName = "SIMBT";
 	  
       BuyImbalanceLo.Name = "Buy Imbalance Bottom";
       BuyImbalanceLo.DrawStyle = DRAWSTYLE_DASH;
       BuyImbalanceLo.LineWidth = 1;
-      BuyImbalanceLo.PrimaryColor = RGB(0,255,255); // cyan
+      BuyImbalanceLo.PrimaryColor = RGB_LightGreen;
       BuyImbalanceLo.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       BuyImbalanceLo.ShortName = "BIMBB";
 
       SellImbalanceLo.Name = "Sell Absorption Bottom";
       SellImbalanceLo.DrawStyle = DRAWSTYLE_DASH;
-      SellImbalanceLo.LineWidth = 1;
-      SellImbalanceLo.PrimaryColor = RGB(255,128,128); // light red;
+      SellImbalanceLo.LineWidth = 2;
+      SellImbalanceLo.PrimaryColor = RGB_LightGreen;
       SellImbalanceLo.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       SellImbalanceLo.ShortName = "SELLABS";
 	  
       BuyImbalanceRatioHi.Name = "Buy Absorption Ratio Top";
       BuyImbalanceRatioHi.DrawStyle = DRAWSTYLE_IGNORE;
       BuyImbalanceRatioHi.LineWidth = 2;
-      BuyImbalanceRatioHi.PrimaryColor = RGB(255,255,255); // white;
+      BuyImbalanceRatioHi.PrimaryColor = RGB_White; // white;
 
       BuyImbalanceRatioLo.Name = "Buy Imbalance Ratio Bottom";
       BuyImbalanceRatioLo.DrawStyle = DRAWSTYLE_IGNORE;
       BuyImbalanceRatioLo.LineWidth = 2;
-      BuyImbalanceRatioLo.PrimaryColor = RGB(255,255,255); // white;
+      BuyImbalanceRatioLo.PrimaryColor = RGB_White; // white;
 
       SellImbalanceRatioHi.Name = "Sell Imbalance Ratio Top";
       SellImbalanceRatioHi.DrawStyle = DRAWSTYLE_IGNORE;
       SellImbalanceRatioHi.LineWidth = 2;
-      SellImbalanceRatioHi.PrimaryColor = RGB(255,255,255); // white;
+      SellImbalanceRatioHi.PrimaryColor = RGB_White; // white;
 
       SellImbalanceRatioLo.Name = "Sell Absorption Ratio Bottom";
       SellImbalanceRatioLo.DrawStyle = DRAWSTYLE_IGNORE;
       SellImbalanceRatioLo.LineWidth = 2;
-      SellImbalanceRatioLo.PrimaryColor = RGB(255,255,255); // white;
+      SellImbalanceRatioLo.PrimaryColor = RGB_White; // white;
 
 	  ImbalanceRatio.Name = "Imbalance Ratio";
-	  ImbalanceRatio.SetInt(3);
+	  ImbalanceRatio.SetInt(4);
 	  ImbalanceRatio.SetIntLimits(1,1000);
 	  
 	  MinimumBarSize.Name = "Minimum Size For Bar";
@@ -327,83 +334,83 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	  MarketDepthLimit.SetIntLimits(1,999);
 
 	  ExhaustRatio.Name = "Exhaustion Ratio";
-	  ExhaustRatio.SetInt(30);
+	  ExhaustRatio.SetInt(3);
 	  ExhaustRatio.SetIntLimits(2, 1000);
 	  
       VolumePerTick.Name = "Volume Per Tick";
       VolumePerTick.DrawStyle = DRAWSTYLE_IGNORE;
       VolumePerTick.LineWidth = 2;
-      VolumePerTick.PrimaryColor = RGB(0,255,255); // cyan
+      VolumePerTick.PrimaryColor = RGB_Cyan; // cyan
 
       DeltaVolume.Name = "Delta Volume";
       DeltaVolume.DrawStyle = DRAWSTYLE_IGNORE;
       DeltaVolume.LineWidth = 2;
-      DeltaVolume.PrimaryColor = RGB(0,255,255); // cyan
+      DeltaVolume.PrimaryColor = RGB_Cyan; // cyan
 
       VWAPPrice.Name = "VWAP Price";
-      VWAPPrice.DrawStyle = DRAWSTYLE_DASH;
+      VWAPPrice.DrawStyle = DRAWSTYLE_IGNORE;
       VWAPPrice.LineWidth = 1;
-      VWAPPrice.PrimaryColor = RGB(255,0,255); // purple/magenta
+      VWAPPrice.PrimaryColor = RGB_Magenta; // purple/magenta
       VWAPPrice.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       VWAPPrice.ShortName = "VWAP";
 
       Candle_Size.Name = "Candle Size";
       Candle_Size.DrawStyle = DRAWSTYLE_IGNORE;
       Candle_Size.LineWidth = 2;
-      Candle_Size.PrimaryColor = RGB(0,255,255); // cyan
+      Candle_Size.PrimaryColor = RGB_Cyan; // cyan
 	  
 	  ReducingVolumeBidTop.Name = "Reducing Volume Bid Top";
       ReducingVolumeBidTop.DrawStyle = DRAWSTYLE_TRANSPARENT_FILL_RECTANGLE_TOP;
       ReducingVolumeBidTop.LineWidth = 2;
-      ReducingVolumeBidTop.PrimaryColor = RGB(0,255,0); // dark green
+      ReducingVolumeBidTop.PrimaryColor = RGB_Green; // dark green
 
 	  ReducingVolumeBidBot.Name = "Reducing Volume Bid Bottom";
       ReducingVolumeBidBot.DrawStyle = DRAWSTYLE_TRANSPARENT_FILL_RECTANGLE_BOTTOM;
       ReducingVolumeBidBot.LineWidth = 2;
-      ReducingVolumeBidBot.PrimaryColor = RGB(0,255,0); // dark green
+      ReducingVolumeBidBot.PrimaryColor = RGB_Green; // dark green
 
 	  ReducingVolumeAskTop.Name = "Reducing Volume Ask Top";
       ReducingVolumeAskTop.DrawStyle = DRAWSTYLE_TRANSPARENT_FILL_RECTANGLE_TOP;
       ReducingVolumeAskTop.LineWidth = 2;
-      ReducingVolumeAskTop.PrimaryColor = RGB(255,0,0); // dark red
+      ReducingVolumeAskTop.PrimaryColor = RGB_Red; // dark red
 
 	  ReducingVolumeAskBot.Name = "Reducing Volume Ask Bottom";
       ReducingVolumeAskBot.DrawStyle = DRAWSTYLE_TRANSPARENT_FILL_RECTANGLE_BOTTOM;
       ReducingVolumeAskBot.LineWidth = 2;
-      ReducingVolumeAskBot.PrimaryColor = RGB(255,0,0); // dark red
+      ReducingVolumeAskBot.PrimaryColor = RGB_Red; // dark red
 
       LOBMinBidVAP.Name = "LOBMinAskVAP";
       LOBMinBidVAP.DrawStyle = DRAWSTYLE_IGNORE;
       LOBMinBidVAP.LineWidth = 2;
-      LOBMinBidVAP.PrimaryColor = RGB(128,255,255); // light cyan
+      LOBMinBidVAP.PrimaryColor = RGB_LightCyan; // light cyan
 	  LOBMinBidVAP.ShortName = "LOBMinAsk";
 	  LOBMinBidVAP.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
 
       LOBMinAskVAP.Name = "LOBMinBidVAP";
       LOBMinAskVAP.DrawStyle = DRAWSTYLE_IGNORE;
       LOBMinAskVAP.LineWidth = 2;
-      LOBMinAskVAP.PrimaryColor = RGB(255,128,128); // light red
+      LOBMinAskVAP.PrimaryColor = RGB_LightRed; // light red
       LOBMinAskVAP.ShortName = "LOBMinBid";
 	  LOBMinAskVAP.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
 
       LOBMaxBidVAP.Name = "LOBMaxAskVAP";
       LOBMaxBidVAP.DrawStyle = DRAWSTYLE_IGNORE;
       LOBMaxBidVAP.LineWidth = 4;
-      LOBMaxBidVAP.PrimaryColor = RGB(128,255,255); // light cyan
+      LOBMaxBidVAP.PrimaryColor = RGB_LightCyan; // light cyan
       LOBMaxBidVAP.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       LOBMaxBidVAP.ShortName = "LOBMaxAsk";
 
       LOBMaxAskVAP.Name = "LOBMaxBidVAP";
       LOBMaxAskVAP.DrawStyle = DRAWSTYLE_IGNORE;
       LOBMaxAskVAP.LineWidth = 4;
-      LOBMaxAskVAP.PrimaryColor = RGB(255,128,128); // light red
+      LOBMaxAskVAP.PrimaryColor = RGB_LightRed; // light red
       LOBMaxAskVAP.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       LOBMaxAskVAP.ShortName = "LOBMaxBid";
 
       LOBMinBidVolume.Name = "LOBMinAskVolume";
       LOBMinBidVolume.DrawStyle = DRAWSTYLE_IGNORE;
       LOBMinBidVolume.LineWidth = 2;
-      LOBMinBidVolume.PrimaryColor = RGB(255,128,128); // light red
+      LOBMinBidVolume.PrimaryColor = RGB_LightRed; // light red
 
       LOBMinAskVolume.Name = "LOBMinBidVolume";
       LOBMinAskVolume.DrawStyle = DRAWSTYLE_IGNORE;
@@ -413,27 +420,27 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       LOBMaxBidVolume.Name = "LOBMaxAskVolume";
       LOBMaxBidVolume.DrawStyle = DRAWSTYLE_IGNORE;
       LOBMaxBidVolume.LineWidth = 5;
-      LOBMaxBidVolume.PrimaryColor = RGB(128,255,255); // light cyan
+      LOBMaxBidVolume.PrimaryColor = RGB_LightCyan; // light cyan
 
       LOBMaxAskVolume.Name = "LOBMaxBidVolume";
       LOBMaxAskVolume.DrawStyle = DRAWSTYLE_IGNORE;
       LOBMaxAskVolume.LineWidth = 5;
-      LOBMaxAskVolume.PrimaryColor = RGB(255,128,128); // light red
+      LOBMaxAskVolume.PrimaryColor = RGB_LightRed; // light red
 
       LOBAvgBidVolume.Name = "LOBAvgAskVolume";
       LOBAvgBidVolume.DrawStyle = DRAWSTYLE_IGNORE;
       LOBAvgBidVolume.LineWidth = 5;
-      LOBAvgBidVolume.PrimaryColor = RGB(128,255,255); // light cyan
+      LOBAvgBidVolume.PrimaryColor = RGB_LightCyan; // light cyan
 
       LOBAvgAskVolume.Name = "LOBAvgBidVolume";
       LOBAvgAskVolume.DrawStyle = DRAWSTYLE_IGNORE;
       LOBAvgAskVolume.LineWidth = 5;
-      LOBAvgAskVolume.PrimaryColor = RGB(255,128,128); // light red
+      LOBAvgAskVolume.PrimaryColor = RGB_LightRed; // light red
 
       LOBAvgVolume.Name = "LOBAvgVolume";
       LOBAvgVolume.DrawStyle = DRAWSTYLE_IGNORE;
       LOBAvgVolume.LineWidth = 5;
-      LOBAvgVolume.PrimaryColor = RGB(255,128,128); // light red
+      LOBAvgVolume.PrimaryColor = RGB_Cyan; // light red
 
       LOBTotalBidVolume.Name = "LOBTotalAskVolume";
       LOBTotalBidVolume.DrawStyle = DRAWSTYLE_IGNORE;
@@ -458,17 +465,17 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	  LOBDeltaVolume.Name = "LOBDelta Volume";
       LOBDeltaVolume.DrawStyle = DRAWSTYLE_IGNORE;
       LOBDeltaVolume.LineWidth = 2;
-      LOBDeltaVolume.PrimaryColor = RGB(0,255,255); // cyan
+      LOBDeltaVolume.PrimaryColor = RGB_Cyan; // cyan
 
       LOBCurBidVolume.Name = "LOBCurAskVolume";
       LOBCurBidVolume.DrawStyle = DRAWSTYLE_IGNORE;
       LOBCurBidVolume.LineWidth = 5;
-      LOBCurBidVolume.PrimaryColor = RGB(128,255,255); // light cyan
+      LOBCurBidVolume.PrimaryColor = RGB_LightCyan; // light cyan
 
       LOBCurAskVolume.Name = "LOBCurBidVolume";
       LOBCurAskVolume.DrawStyle = DRAWSTYLE_IGNORE;
       LOBCurAskVolume.LineWidth = 5;
-      LOBCurAskVolume.PrimaryColor = RGB(255,128,128); // light red
+      LOBCurAskVolume.PrimaryColor = RGB_LightRed; // light red
 
       CurPrice.Name = "Current Price";
       CurPrice.DrawStyle = DRAWSTYLE_IGNORE;
@@ -483,14 +490,14 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       UBHi.Name = "Unfinished Business Hi";
       UBHi.DrawStyle = DRAWSTYLE_IGNORE;
       UBHi.LineWidth = 1;
-      UBHi.PrimaryColor = RGB(255,128,64); // orange
+      UBHi.PrimaryColor = RGB_Orange; // orange
 	  UBHi.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       UBHi.ShortName = "UFBT";
 	  
       UBLo.Name = "Unfinished Business Low";
       UBLo.DrawStyle = DRAWSTYLE_IGNORE;
       UBLo.LineWidth = 1;
-      UBLo.PrimaryColor = RGB(255,128,64); // orange
+      UBLo.PrimaryColor = RGB_Orange; // orange
 	  UBLo.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       UBLo.ShortName = "UFBB";
 	  
@@ -502,7 +509,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	  NumSellImb.Name = "Number of Sell Imbalances";
       NumSellImb.DrawStyle = DRAWSTYLE_IGNORE;
       NumSellImb.LineWidth = 2;
-      NumSellImb.PrimaryColor = RGB(255,128,128); // light red
+      NumSellImb.PrimaryColor = RGB_LightRed; // light red
 
 	  NumBuyZP.Name = "Number of Buy Small Prints";
       NumBuyZP.DrawStyle = DRAWSTYLE_IGNORE;
@@ -512,33 +519,35 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	  NumSellZP.Name = "Number of Sell Small Prints";
       NumSellZP.DrawStyle = DRAWSTYLE_IGNORE;
       NumSellZP.LineWidth = 2;
-      NumSellZP.PrimaryColor = RGB(255,128,128); // light red
+      NumSellZP.PrimaryColor = RGB_LightRed; // light red
 
+	  /*
 	  BuyExhaust.Name = "Buy Exhaustion";
 	  BuyExhaust.DrawStyle = DRAWSTYLE_DASH;
 	  BuyExhaust.LineWidth = 2;
-	  BuyExhaust.PrimaryColor = RGB(255, 227, 150); // sand
+	  BuyExhaust.PrimaryColor = RGB_Sand; // sand
 	  BuyExhaust.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
 	  BuyExhaust.ShortName = "BUYEX";
 
 	  SellExhaust.Name = "Sell Exhaustion";
 	  SellExhaust.DrawStyle = DRAWSTYLE_DASH;
 	  SellExhaust.LineWidth = 2;
-	  SellExhaust.PrimaryColor = RGB(150, 255, 227); // light teal
+	  SellExhaust.PrimaryColor = RGB_LightTeal; // light teal
 	  SellExhaust.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
 	  SellExhaust.ShortName = "SELLEX";
+	  */
 
 	  BuyExhaust.Name = "Buy Exhaustion";
 	  BuyExhaust.DrawStyle = DRAWSTYLE_DASH;
 	  BuyExhaust.LineWidth = 2;
-	  BuyExhaust.PrimaryColor = RGB(255, 227, 150); // sand
+	  BuyExhaust.PrimaryColor = RGB_Sand; // sand
 	  BuyExhaust.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
 	  BuyExhaust.ShortName = "BUYEX";
 
 	  SellExhaust.Name = "Sell Exhaustion";
 	  SellExhaust.DrawStyle = DRAWSTYLE_DASH;
 	  SellExhaust.LineWidth = 2;
-	  SellExhaust.PrimaryColor = RGB(150, 255, 227); // light teal
+	  SellExhaust.PrimaryColor = RGB_LightTeal; // light teal
 	  SellExhaust.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
 	  SellExhaust.ShortName = "SELLEX";
 
@@ -551,7 +560,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	  SellExhRatio.Name = "Sell Exhaustion Ratio";
 	  SellExhRatio.DrawStyle = DRAWSTYLE_IGNORE;
 	  SellExhRatio.LineWidth = 2;
-	  SellExhRatio.PrimaryColor = RGB(255, 128, 128); // light red
+	  SellExhRatio.PrimaryColor = RGB_LightRed; // light red
 
 	  /*
 	  SignalsInTopTail.Name = "Number of signals in top tail";
@@ -562,7 +571,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	  SignalsInBotTail.Name = "Number of signals in bottom tail";
 	  SignalsInBotTail.DrawStyle = DRAWSTYLE_IGNORE;
 	  SignalsInBotTail.LineWidth = 2;
-	  SignalsInBotTail.PrimaryColor = RGB(255, 128, 128); // light red
+	  SignalsInBotTail.PrimaryColor = RGB_LightRed; // light red
 	  */
 
 /*
@@ -994,8 +1003,8 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    }
    
    MaxVAP[sc.Index] = MaxVolumePrice;
-//    MaxBidVAP[sc.Index] = MaxBidVolumePrice;
-//    MaxAskVAP[sc.Index] = MaxAskVolumePrice;
+   MaxBidVAP[sc.Index] = MaxBidVolumePrice;
+   MaxAskVAP[sc.Index] = MaxAskVolumePrice;
 //    MaxVAPPercent[sc.Index] = ((MaxVolumePrice - sc.Low[sc.Index]) / (sc.High[sc.Index] - sc.Low[sc.Index])) * 100.0;
    MaxVAPVolume[sc.Index] = MaxVolume;
    TotalBidVolume[sc.Index] = TBV;
@@ -1004,12 +1013,14 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    DV = (int)TAV - (int)TBV;
    DeltaVolume[sc.Index] = DV;
    //if (DV == 0) DeltaVolume.PrimaryColor = COLOR_YELLOW;
-   //if (DV < 0) DeltaVolume.PrimaryColor = RGB(255,128,128); // light red
+   //if (DV < 0) DeltaVolume.PrimaryColor = RGB_LightRed; // light red
    //if (DV > 0) DeltaVolume.PrimaryColor = COLOR_GREEN;
    
    TOT = TAV + TBV;
+   /*
    TotalBidVolumePercent[sc.Index] = (TBV / TOT) * 100.0;
    TotalAskVolumePercent[sc.Index] = (TAV / TOT) * 100.0;
+   */
    TotalBidVolumePerTick[sc.Index] = TBV / Count;
    TotalAskVolumePerTick[sc.Index] = TAV / Count;
    if (ZPAPrice > 0.0) ZPA[sc.Index] = ZPAPrice;
