@@ -197,8 +197,8 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       MaxAskVAP.PrimaryColor = COLOR_GREEN;
 
       MaxVAP.Name = "MaxVAP";
-      MaxVAP.DrawStyle = DRAWSTYLE_DASH;
-      MaxVAP.LineWidth = 1;
+      MaxVAP.DrawStyle = DRAWSTYLE_LINE;
+      MaxVAP.LineWidth = 2;
       MaxVAP.PrimaryColor = COLOR_YELLOW;
       MaxVAP.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       MaxVAP.ShortName = "VPOC";
