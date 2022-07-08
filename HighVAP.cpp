@@ -79,8 +79,10 @@ bool IsExpired(SCStudyInterfaceRef sc)
 SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 {
 
-	if (sc.HideStudy == 1)
+    /*	
+    if (sc.HideStudy == 1)
 		return;
+    */
 
 	sgctr = 0;
 	SCInputRef ImbalanceRatio = sc.Input[0];
@@ -540,14 +542,14 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	  BuyExhaust.Name = "Buy Exhaustion";
 	  BuyExhaust.DrawStyle = DRAWSTYLE_DASH;
 	  BuyExhaust.LineWidth = 2;
-	  BuyExhaust.PrimaryColor = RGB_Sand; // sand
+	  BuyExhaust.PrimaryColor = RGB_LightRed; // light red
 	  BuyExhaust.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
 	  BuyExhaust.ShortName = "BUYEX";
 
 	  SellExhaust.Name = "Sell Exhaustion";
 	  SellExhaust.DrawStyle = DRAWSTYLE_DASH;
 	  SellExhaust.LineWidth = 2;
-	  SellExhaust.PrimaryColor = RGB_LightTeal; // light teal
+	  SellExhaust.PrimaryColor = RGB_Green; // green
 	  SellExhaust.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
 	  SellExhaust.ShortName = "SELLEX";
 
