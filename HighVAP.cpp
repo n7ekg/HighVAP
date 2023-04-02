@@ -647,7 +647,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    if (DebugLog.GetInt() == 1)
    {
 	   DebugFlag = 1;
-	   DebugLog.SetInt(0);
+	   // DebugLog.SetInt(0); // Now set at the end of the calculations
    }
 
    if (DebugLog.GetInt() == 1)
@@ -885,31 +885,31 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 			 }
 		 }
 		 
-		 // Buy Imbalance
+		 // Buy Count Imbalance
 		 // if (AskArray[ElementIndex] > (BidArray[ElementIndex-1] * ImbRatio) && AskArray[ElementIndex-1] == 0 && AskArray[ElementIndex] > BidArray[ElementIndex])
 		 if (DebugLog.GetInt() == 1)
 		 {
-			 sprintf(scratchmsg, "IMB: Count=%d, ElementIndex=%d, AskArray+1=%d, BidArray=%d\n", Count, ElementIndex, AskArray[ElementIndex+1], BidArray[ElementIndex]);
+			 sprintf(scratchmsg, "IMB Count: Count=%d, ElementIndex=%d, AskArray+1=%d, BidArray=%d\n", Count, ElementIndex, AskArray[ElementIndex+1], BidArray[ElementIndex]);
 			 sc.AddMessageToLog(scratchmsg, 1);
 		 }
 		 if (AskArray[ElementIndex+1] >= (BidArray[ElementIndex] * ImbRatio) && ElementIndex+1 < Count) // && AskArray[ElementIndex] > BidArray[ElementIndex])
 		 {
 			 if (DebugLog.GetInt() == 1)
 			 {
-				 sprintf(scratchmsg, "Buy Imbalance: AskVolume[%d] (%d) > BidVolume[%d] (%d) * %d (%d) | ElementIndex=%d, Count=%d\n",
+				 sprintf(scratchmsg, "Buy Count Imbalance: AskVolume[%d] (%d) > BidVolume[%d] (%d) * %d (%d) | ElementIndex=%d, Count=%d\n",
 				 ElementIndex+1, AskArray[ElementIndex+1], ElementIndex, BidArray[ElementIndex], ImbRatio, BidArray[ElementIndex] * ImbRatio, ElementIndex, Count);
 				 sc.AddMessageToLog(scratchmsg, 1);
 			 }
 			 CountBuyImb++;
 		 }
 		 
-		 // Sell Imbalance
+		 // Sell Count Imbalance
 		 // if ((AskArray[ElementIndex+1] * ImbRatio) < BidArray[ElementIndex] && BidArray[ElementIndex+1] == 0 && BidArray[ElementIndex] > AskArray[ElementIndex])
 		 if ((BidArray[ElementIndex]) >= (AskArray[ElementIndex+1] * ImbRatio) && ElementIndex+1 < Count) // && AskArray[ElementIndex] < BidArray[ElementIndex])
 		 {
 			 if (DebugLog.GetInt() == 1)
 			 {
-				 sprintf(scratchmsg, "Sell Imbalance: (BidVolume[%d]) (%d) > AskVolume[%d] (%d) * %d (%d) | ElementIndex=%d, Count=%d\n",
+				 sprintf(scratchmsg, "Sell Count Imbalance: (BidVolume[%d]) (%d) > AskVolume[%d] (%d) * %d (%d) | ElementIndex=%d, Count=%d\n",
 				 ElementIndex, BidArray[ElementIndex], ElementIndex+1, AskArray[ElementIndex+1], ImbRatio, AskArray[ElementIndex+1] * ImbRatio, ElementIndex, Count);
 				 sc.AddMessageToLog(scratchmsg, 1);
 			 }
@@ -933,14 +933,22 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    if (Count >= MinBarSize)
    {
 		/* Check buy/sell imbalance at the top of the bar */
-		for (int ElementIndex = Count - 3; ElementIndex < Count; ElementIndex++)
+		for (int ElementIndex = Count - 2; ElementIndex < Count; ElementIndex++)
 		{
+			 /*
+			 if (DebugLog.GetInt() == 1)
+			 {
+				 sprintf(scratchmsg, "Buy/Sell Top Imbalance: AskVolume[%d] (%d) >= BidVolume[%d] (%d) * %d (%d) | ElementIndex=%d, Count=%d\n",
+				 ElementIndex, AskArray[ElementIndex], ElementIndex, BidArray[ElementIndex-1], ImbRatio, BidArray[ElementIndex-1] * ImbRatio, ElementIndex, Count);
+				 sc.AddMessageToLog(scratchmsg, 1);
+			 }
+			 */
 			if (AskArray[ElementIndex] >= ((BidArray[ElementIndex-1] == 0 ? 1 : BidArray[ElementIndex - 1]) * ImbRatio))
 			{
 				AIMBPriceHi = PriceArray[ElementIndex];
 				if (AskArray[ElementIndex] > 0 && BidArray[ElementIndex-1] > 0) AIMBRatioHi = AskArray[ElementIndex] / BidArray[ElementIndex-1];
 			}
-			if ((BidArray[ElementIndex-1]) >= ((AskArray[ElementIndex - 1] == 0 ? 1 : AskArray[ElementIndex - 1]) * ImbRatio))
+			if ((BidArray[ElementIndex-1]) >= ((AskArray[ElementIndex] == 0 ? 1 : AskArray[ElementIndex]) * ImbRatio))
 			{
 				BIMBPriceHi = PriceArray[ElementIndex-1];
 				if (BidArray[ElementIndex-1] > 0 && AskArray[ElementIndex] > 0) BIMBRatioHi = BidArray[ElementIndex-1] / AskArray[ElementIndex];
@@ -1089,4 +1097,5 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	   fclose(fout);
    }
    */
+   // if(DebugLog.GetInt() == 1) DebugLog.SetInt(0);
 }
