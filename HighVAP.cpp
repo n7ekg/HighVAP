@@ -267,12 +267,12 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       ZPA.LineWidth = 2;
       ZPA.PrimaryColor = RGB_LightRed; // light red;
 
-      BuyImbalanceHi.Name = "Buy Absorption Top";
+      BuyImbalanceHi.Name = "Buy Imbalance Top";
       BuyImbalanceHi.DrawStyle = DRAWSTYLE_DASH;
       BuyImbalanceHi.LineWidth = 2;
       BuyImbalanceHi.PrimaryColor = RGB_LightRed;
       BuyImbalanceHi.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
-      BuyImbalanceHi.ShortName = "BUYABS";
+      BuyImbalanceHi.ShortName = "BIMBT";
 
       SellImbalanceHi.Name = "Sell Imbalance Top";
       SellImbalanceHi.DrawStyle = DRAWSTYLE_DASH;
@@ -288,12 +288,12 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       BuyImbalanceLo.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
       BuyImbalanceLo.ShortName = "BIMBB";
 
-      SellImbalanceLo.Name = "Sell Absorption Bottom";
+      SellImbalanceLo.Name = "Sell Imbalance Bottom";
       SellImbalanceLo.DrawStyle = DRAWSTYLE_DASH;
       SellImbalanceLo.LineWidth = 2;
       SellImbalanceLo.PrimaryColor = RGB_LightGreen;
       SellImbalanceLo.LineLabel = LL_DISPLAY_NAME | LL_NAME_REVERSE_COLORS | LL_VALUE_ALIGN_CENTER | LL_VALUE_ALIGN_VALUES_SCALE | LL_NAME_ALIGN_CENTER | LL_NAME_ALIGN_RIGHT;
-      SellImbalanceLo.ShortName = "SELLABS";
+      SellImbalanceLo.ShortName = "SIMBB";
 	  
       BuyImbalanceRatioHi.Name = "Buy Absorption Ratio Top";
       BuyImbalanceRatioHi.DrawStyle = DRAWSTYLE_IGNORE;
