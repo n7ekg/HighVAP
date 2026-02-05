@@ -91,6 +91,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	SCInputRef DebugLog = sc.Input[3];
 	SCInputRef MarketDepthLimit = sc.Input[4];
 	SCInputRef ExhaustRatio = sc.Input[5];
+	SCInputRef ImbalanceCompare = sc.Input[6];
 
 	// SCSubgraphRef MaxBidVAP = sc.Subgraph[0];
 	// SCSubgraphRef MaxAskVAP = sc.Subgraph[1];
@@ -182,7 +183,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
       sc.MaintainHistoricalMarketDepthData = 1;
       sc.MaintainVolumeAtPriceData = 1;
 
-      sc.GraphName = "High Volume At Price";
+      sc.GraphName = "High Volume At Price - 01-22-2024";
       sc.StudyDescription = "Display various statistics for each bar.";
       sc.AutoLoop = 1;
       sc.GraphRegion = 0;
@@ -338,6 +339,10 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	  ExhaustRatio.Name = "Exhaustion Ratio";
 	  ExhaustRatio.SetInt(3);
 	  ExhaustRatio.SetIntLimits(2, 1000);
+	  
+	  ImbalanceCompare.Name = "Imbalance Compare 0=Diagonal, 1=Horizontal";
+	  ImbalanceCompare.SetInt(0);
+	  ImbalanceCompare.SetIntLimits(0,1);
 	  
       VolumePerTick.Name = "Volume Per Tick";
       VolumePerTick.DrawStyle = DRAWSTYLE_IGNORE;
@@ -611,6 +616,7 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    float LOBBidPriceArray[1000], LOBAskPriceArray[1000];
 
    int ImbRatio = ImbalanceRatio.GetInt();
+   int ImbCompare = ImbalanceCompare.GetInt(); // Imbalance Compare 0=Diagonal, 1=Horizontal
    int MinBarSize = MinimumBarSize.GetInt();
    unsigned int CompLevels = CompareLevels.GetInt();
    unsigned int CompCount = 0;
@@ -918,9 +924,9 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 		 // if (AIMBPriceHi == BIMBPriceHi) AIMBPriceHi = BIMBPriceHi = 0.0; // If imbalances at the same price, set to 0		 
 		 // if (AIMBPriceLo == BIMBPriceLo) AIMBPriceLo = BIMBPriceLo = 0.0; // If imbalances at the same price, set to 0		 
 
-		 TBV = TBV + p_VolumeAtPriceAtIndex->BidVolume;
-		 TAV = TAV + p_VolumeAtPriceAtIndex->AskVolume;
       }
+	  TBV = TBV + p_VolumeAtPriceAtIndex->BidVolume;
+	  TAV = TAV + p_VolumeAtPriceAtIndex->AskVolume;
    }
    NumBuyZP[sc.Index] = CountBuyZP;
    NumSellZP[sc.Index] = CountSellZP;
@@ -929,7 +935,9 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    
    /* New code to calculate buy/sell imbalances at the top or bottom of a bar */
    
-	AIMBPriceHi = BIMBPriceHi = AIMBPriceLo = BIMBPriceLo = AIMBRatioHi = BIMBRatioHi = AIMBRatioLo = BIMBRatioLo = 0.0;
+   // int ImbCompare = ImbalanceCompare.GetInt(); // Imbalance Compare 0=Diagonal, 1=Horizontal
+   
+   AIMBPriceHi = BIMBPriceHi = AIMBPriceLo = BIMBPriceLo = AIMBRatioHi = BIMBRatioHi = AIMBRatioLo = BIMBRatioLo = 0.0;
    if (Count >= MinBarSize)
    {
 		/* Check buy/sell imbalance at the top of the bar */
@@ -943,31 +951,63 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 				 sc.AddMessageToLog(scratchmsg, 1);
 			 }
 			 */
-			if (AskArray[ElementIndex] >= ((BidArray[ElementIndex-1] == 0 ? 1 : BidArray[ElementIndex - 1]) * ImbRatio))
+			if (ImbCompare == 0)
 			{
-				AIMBPriceHi = PriceArray[ElementIndex];
-				if (AskArray[ElementIndex] > 0 && BidArray[ElementIndex-1] > 0) AIMBRatioHi = AskArray[ElementIndex] / BidArray[ElementIndex-1];
+				if (AskArray[ElementIndex] >= ((BidArray[ElementIndex-1] == 0 ? 1 : BidArray[ElementIndex - 1]) * ImbRatio))
+				{
+					AIMBPriceHi = PriceArray[ElementIndex];
+					if (AskArray[ElementIndex] > 0 && BidArray[ElementIndex-1] > 0) AIMBRatioHi = AskArray[ElementIndex] / BidArray[ElementIndex-1];
+				}
+				if ((BidArray[ElementIndex-1]) >= ((AskArray[ElementIndex] == 0 ? 1 : AskArray[ElementIndex]) * ImbRatio))
+				{
+					BIMBPriceHi = PriceArray[ElementIndex-1];
+					if (BidArray[ElementIndex-1] > 0 && AskArray[ElementIndex] > 0) BIMBRatioHi = BidArray[ElementIndex-1] / AskArray[ElementIndex];
+				}
 			}
-			if ((BidArray[ElementIndex-1]) >= ((AskArray[ElementIndex] == 0 ? 1 : AskArray[ElementIndex]) * ImbRatio))
+			else
 			{
-				BIMBPriceHi = PriceArray[ElementIndex-1];
-				if (BidArray[ElementIndex-1] > 0 && AskArray[ElementIndex] > 0) BIMBRatioHi = BidArray[ElementIndex-1] / AskArray[ElementIndex];
+				if (AskArray[ElementIndex] >= ((BidArray[ElementIndex] == 0 ? 1 : BidArray[ElementIndex]) * ImbRatio))
+				{
+					AIMBPriceHi = PriceArray[ElementIndex];
+					if (AskArray[ElementIndex] > 0 && BidArray[ElementIndex] > 0) AIMBRatioHi = AskArray[ElementIndex] / BidArray[ElementIndex];
+				}
+				if ((BidArray[ElementIndex]) >= ((AskArray[ElementIndex] == 0 ? 1 : AskArray[ElementIndex]) * ImbRatio))
+				{
+					BIMBPriceHi = PriceArray[ElementIndex];
+					if (BidArray[ElementIndex] > 0 && AskArray[ElementIndex] > 0) BIMBRatioHi = BidArray[ElementIndex] / AskArray[ElementIndex];
+				}
 			}
 		}
 		
 		/* Now do it at the bottom of the bar */
-		// Do we neeed to check for 0 at the bottom of the bar? FIXME
-		for (int ElementIndex = 2; ElementIndex >= 0; ElementIndex--)
+		// Do we need to check for 0 at the bottom of the bar? FIXME
+		for (int ElementIndex = Count - 2; ElementIndex >= 0; ElementIndex--)
 		{
-			if (AskArray[ElementIndex+1] >= (BidArray[ElementIndex] * ImbRatio))
+			if (ImbCompare == 0)
 			{
-				AIMBPriceLo = PriceArray[ElementIndex+1];
-				if (AskArray[ElementIndex+1] > 0 && BidArray[ElementIndex] > 0) AIMBRatioLo = AskArray[ElementIndex+1] / BidArray[ElementIndex];
+				if (AskArray[ElementIndex+1] >= (BidArray[ElementIndex] * ImbRatio))
+				{
+					AIMBPriceLo = PriceArray[ElementIndex+1];
+					if (AskArray[ElementIndex+1] > 0 && BidArray[ElementIndex] > 0) AIMBRatioLo = AskArray[ElementIndex+1] / BidArray[ElementIndex];
+				}
+				if ((BidArray[ElementIndex]) >= (AskArray[ElementIndex+1] * ImbRatio))
+				{
+					BIMBPriceLo = PriceArray[ElementIndex];
+					if (BidArray[ElementIndex] > 0 && AskArray[ElementIndex+1] > 0) BIMBRatioLo = BidArray[ElementIndex] / AskArray[ElementIndex+1];
+				}
 			}
-			if ((BidArray[ElementIndex]) >= (AskArray[ElementIndex+1] * ImbRatio))
+			else
 			{
-				BIMBPriceLo = PriceArray[ElementIndex];
-				if (BidArray[ElementIndex] > 0 && AskArray[ElementIndex+1] > 0) BIMBRatioLo = BidArray[ElementIndex] / AskArray[ElementIndex+1];
+				if (AskArray[ElementIndex] >= (BidArray[ElementIndex] * ImbRatio))
+				{
+					AIMBPriceLo = PriceArray[ElementIndex];
+					if (AskArray[ElementIndex] > 0 && BidArray[ElementIndex] > 0) AIMBRatioLo = AskArray[ElementIndex] / BidArray[ElementIndex];
+				}
+				if ((BidArray[ElementIndex]) >= (AskArray[ElementIndex] * ImbRatio))
+				{
+					BIMBPriceLo = PriceArray[ElementIndex];
+					if (BidArray[ElementIndex] > 0 && AskArray[ElementIndex] > 0) BIMBRatioLo = BidArray[ElementIndex] / AskArray[ElementIndex+1];
+				}
 			}
 		}
 			
@@ -1007,9 +1047,9 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
 	   SellExhRatio[sc.Index] = ((float)BidArray[1] / (float)(BidArray[0] == 0 ? 1 : BidArray[0]));
 
 	   if (BuyExhRatio[sc.Index] >= ExhaustRatio.GetInt())
-		   BuyExhaust[sc.Index] = PriceArray[Count - 1];
+		   BuyExhaust[sc.Index] = PriceArray[Count - 2];
 	   if (SellExhRatio[sc.Index] >= ExhaustRatio.GetInt())
-		   SellExhaust[sc.Index] = PriceArray[0];
+		   SellExhaust[sc.Index] = PriceArray[1];
    }
    
    MaxVAP[sc.Index] = MaxVolumePrice;
@@ -1045,9 +1085,10 @@ SCSFExport scsf_HighVAP(SCStudyInterfaceRef sc)
    BuyImbalanceRatioLo[sc.Index] = AIMBRatioLo;
    SellImbalanceRatioLo[sc.Index] = BIMBRatioLo;
 
-   VolumePerTick[sc.Index] = TOT / Count;
-   Candle_Size[sc.Index] = (sc.High[sc.Index] - sc.Low[sc.Index]) / sc.TickSize;
-   AverageVolume[sc.Index] = (TBV + TAV) / Candle_Size[sc.Index];
+   VolumePerTick[sc.Index] = ((TAV + TBV) / Count);
+   Candle_Size[sc.Index] = (sc.High[sc.Index] - sc.Low[sc.Index] + 1) / sc.TickSize;
+   Candle_Size[sc.Index] = Count;
+   AverageVolume[sc.Index] = ((TBV + TAV) / Candle_Size[sc.Index]);
    VWAPPrice[sc.Index] = xVWAPPrice;
    
    LOBMinBidVAP[sc.Index] = xLOBMinBidVAP;
